@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import View from 'ol/View';
+import {transform} from 'ol/proj';
 
 @Injectable({
   providedIn: 'root'
@@ -10,11 +11,11 @@ export class LocationService {
     let viewCenter = [-7912769.528381, 5215479.987170];
     this.view.setZoom(12);
     if(navigator.geolocation) {
-        // TODO: convert the coords to web mercator
       navigator.geolocation.getCurrentPosition(
         (position : GeolocationPosition) => {
-        viewCenter[0] = position.coords.latitude;
-        viewCenter[1] = position.coords.longitude;
+        viewCenter[0] = position.coords.longitude;
+        viewCenter[1] = position.coords.latitude;
+        viewCenter = transform(viewCenter, 'EPSG:4326', 'EPSG:3857');
         this.view.setCenter(viewCenter)
       }, 
       (err: GeolocationPositionError) => {
