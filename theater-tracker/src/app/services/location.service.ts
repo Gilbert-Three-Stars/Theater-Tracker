@@ -7,19 +7,24 @@ import View from 'ol/View';
 export class LocationService {
   protected view = new View();
   constructor() { 
+    let viewCenter = [-7912769.528381, 5215479.987170];
     this.view.setZoom(12);
     if(navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(position => {
-        let viewCenter = [];
-        // TODO: make sure that the coords are in web mercator form.
-        viewCenter.push(position.coords.latitude);
-        viewCenter.push(position.coords.longitude);
-        this.view.setCenter(viewCenter);
+        // TODO: convert the coords to web mercator
+      navigator.geolocation.getCurrentPosition(
+        (position : GeolocationPosition) => {
+        viewCenter[0] = position.coords.latitude;
+        viewCenter[1] = position.coords.longitude;
+        this.view.setCenter(viewCenter)
+      }, 
+      (err: GeolocationPositionError) => {
+        console.warn(err.message)
+        this.view.setCenter(viewCenter)
       })
     }
     else {
-      this.view.setCenter([-7912769.528381, 5215479.987170]);
-      console.log("Geolocation not supported, setting center to default position")
+      console.warn("Couldn't get navigator.geolocation")
+      this.view.setCenter(viewCenter);
     }
   }
   getView() : View {
