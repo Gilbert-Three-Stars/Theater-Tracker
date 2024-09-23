@@ -15,6 +15,7 @@ import { MapmarkerService } from '../../services/mapmarker.service';
 })
 export class MapComponent {
   @Input() map!: Map;
+
   constructor(private elementRef: ElementRef, private mapMarkerService: MapmarkerService) { }
 
   ngOnInit() {
@@ -26,5 +27,10 @@ export class MapComponent {
 
   ngAfterViewInit() {
     this.mapMarkerService.setMapLoaded(true);
+  }
+  // this method will be called when the user clicks on the map.
+  updateMarker(): void {
+    // TODO: Find where the user clicked the map and update the coordinates accordingly
+    this.mapMarkerService.setMapClicked({coords:})
   }
 }
