@@ -2,19 +2,26 @@ import { Injectable } from '@angular/core';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { LocationService } from '../services/location.service';
 
+interface ClickObject {
+  coords: Array<number>;
+  hasClicked: boolean;
+}
+
 @Injectable({
   providedIn: 'root'
 })
+
 export class MapmarkerService {
+  
   private mapSubject = new BehaviorSubject<boolean>(false);
   private locationService = new LocationService();
-  private clickSubject = new BehaviorSubject<Object>({coords:this.locationService.getCoords(), hasClicked: false})
+  private clickSubject = new BehaviorSubject<ClickObject>({coords:this.locationService.getCoords(), hasClicked: false})
   mapLoaded$: Observable<boolean> = this.mapSubject.asObservable();
-  mapClicked$: Observable<Object> = this.clickSubject.asObservable();
+  mapClicked$: Observable<ClickObject> = this.clickSubject.asObservable();
   setMapLoaded(isLoaded: boolean): void {
     this.mapSubject.next(isLoaded);
   }
-  setMapClicked(clickObject: Object): void {
+  setMapClicked(clickObject: ClickObject): void {
     this.clickSubject.next(clickObject);
   }
 

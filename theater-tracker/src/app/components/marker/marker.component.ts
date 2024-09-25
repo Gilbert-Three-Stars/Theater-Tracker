@@ -22,7 +22,11 @@ export class MarkerComponent {
   ngOnInit() { // this is what happens after the marker gets placed.
     this.mapMarkerService.mapLoaded$.subscribe((mapIsLoaded) => {
       if(mapIsLoaded) { // checking if the map is loaded
-        this.addMarker();
+        this.mapMarkerService.mapClicked$.subscribe((clickObj) => {
+          if(clickObj.hasClicked) {
+            
+          }
+        })
       }
     })
   }
