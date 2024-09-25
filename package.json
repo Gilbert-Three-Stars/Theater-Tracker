@@ -1,0 +1,10 @@
+{
+  "dependencies": {
+    "mock-browser": "^0.92.14"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.47.2",
+    "@types/node": "^22.7.0"
+  },
+  "scripts": {}
+}
