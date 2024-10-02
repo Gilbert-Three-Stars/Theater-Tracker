@@ -15,6 +15,11 @@ import Icon from 'ol/style/Icon.js'
 import Point from 'ol/geom/Point.js';
 import { LocationService } from './services/location.service';
 import {fromLonLat} from 'ol/proj';
+import { TileJSON } from 'ol/source';
+import ImageLayer from 'ol/layer/Image';
+import Static from 'ol/source/ImageStatic.js';
+import ImageSource from 'ol/source/Image.js';
+
 
 
 @Component({
@@ -27,33 +32,46 @@ import {fromLonLat} from 'ol/proj';
 export class AppComponent implements OnInit {
   title = 'theater-tracker';
   map!: Map;
-  displayMarker!: boolean;
   
   
   ngOnInit(): void {
     this.initializeMap();
+    this.addMarker();
   }
 
   initializeMap(): void {
     let locService = new LocationService;
-    let coords = locService.getCoords();
-    console.log(coords)
+    console.log(locService.getView())
     this.map = new Map({
-      view: new View({
-        center: [0, 0],
-        zoom: 1,
-      }),
+      view: locService.getView(),
       layers: [
         new TileLayer({
           source: new OSM(),
         })
-      ]
+      ],
+      target: 'map',
     });
     
-    let view =  new View({
-      center: [0, 0],
-      zoom: 4, // Increase zoom level
-    })
-    this.map.setView(view);
   }
+  addMarker(): void {
+    let locService = new LocationService();
+    console.log(locService.getCoords('EPSG:3857'))
+    let curLocationFeature = new Feature({
+      geometry: new Point(locService.getCoords('EPSG:3857')),
+    })
+    let curLocationStyle = new Style({
+      image: new Icon({
+        src: 'theater-tracker/public/markericon.png'
+      })
+    })
+    curLocationFeature.setStyle(curLocationStyle)
+    let markerLayer = new VectorLayer({
+      source: new VectorSource({
+        features: [curLocationFeature]
+      }),
+      zIndex: 1
+    })
+    this.map.addLayer(markerLayer);
+  }
+
 }

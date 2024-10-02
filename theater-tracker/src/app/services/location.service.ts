@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import View from 'ol/View';
 import {transform} from 'ol/proj';
+import { ProjectionLike } from 'ol/proj';
 
 @Injectable({
   providedIn: 'root'
@@ -31,7 +32,7 @@ export class LocationService {
   getView() : View {
     return this.view;
   }
-  getCoords(): Array<number> {
-    return this._viewCenter;
+  getCoords(projection: ProjectionLike): Array<number> {
+    return transform(this._viewCenter, 'EPSG:3857', projection);
   }
 }
