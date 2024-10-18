@@ -19,7 +19,7 @@ main {
     background-color: var(--sidebar-color);
 }
 .map-container {
-    flex-grow: 1;
+    flex-grow: 1
 }
 
 footer {

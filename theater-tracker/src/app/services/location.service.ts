@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import View from 'ol/View';
 import {transform} from 'ol/proj';
+import { fromLonLat } from 'ol/proj';
 import { ProjectionLike } from 'ol/proj';
 
 @Injectable({
@@ -14,9 +15,7 @@ export class LocationService {
     if(navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (position : GeolocationPosition) => {
-        this._viewCenter[0] = position.coords.longitude;
-        this._viewCenter[1] = position.coords.latitude;
-        this._viewCenter = transform(this._viewCenter, 'EPSG:4326', 'EPSG:3857');
+        this._viewCenter = fromLonLat([position.coords.longitude, position.coords.latitude], 'EPSG:3857')
         this.view.setCenter(this._viewCenter)
       }, 
       (err: GeolocationPositionError) => {
