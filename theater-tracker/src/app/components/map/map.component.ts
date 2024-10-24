@@ -1,8 +1,6 @@
 import { Component, Input } from '@angular/core';
 import Map from 'ol/Map';
 
-
-
 @Component({
   selector: 'app-map',
   standalone: true,
