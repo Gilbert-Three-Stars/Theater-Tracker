@@ -4,7 +4,7 @@ import Map from 'ol/Map';
 import TileLayer from 'ol/layer/Tile';
 import OSM from 'ol/source/OSM';
 import { MapComponent } from './components/map/map.component';
-import { MarkerComponent } from './components/marker/marker.component';
+
 import { CommonModule } from '@angular/common';
 import VectorLayer from 'ol/layer/Vector.js';
 import VectorSource from 'ol/source/Vector.js';
@@ -21,7 +21,7 @@ import Collection from 'ol/Collection';
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, MapComponent, MarkerComponent, CommonModule],
+  imports: [RouterOutlet, MapComponent, CommonModule],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',
 })
@@ -40,12 +40,12 @@ export class AppComponent implements OnInit {
   
   ngOnInit(): void {
     this.initializeMap();
-    console.log(this.markerLayer.get('features'))
+    console.log(this.markerFeatures)
     this.addMarker();
-    console.log(this.markerLayer.get('features')) 
+    console.log(this.markerFeatures) 
   }
 
-  initializeMap(): void {
+  private initializeMap(): void {
     let locService = new LocationService;
     this.map = new Map({
       view: locService.getView(),
@@ -55,14 +55,12 @@ export class AppComponent implements OnInit {
           zIndex: 0,
         }),
         this.markerLayer
-      ],
-      target: 'map',
+      ]
     });
     
   }
-  addMarker(): void {
+  private addMarker(): void {
     let locService = new LocationService();
-    console.log(locService.getCoords('EPSG:3857'))
     let redDotImage = new Image(200, 200)
     redDotImage.src = 'reddotmarker.png'
     let curLocationFeature = new Feature({
@@ -83,5 +81,4 @@ export class AppComponent implements OnInit {
     this.markerFeatures.pop()
     this.markerFeatures.push(curLocationFeature)
   }
-
 }

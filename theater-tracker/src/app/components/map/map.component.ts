@@ -1,25 +1,21 @@
-import { ChangeDetectionStrategy, Component, Input, ElementRef } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import Map from 'ol/Map';
-import { LocationService } from '../../services/location.service';
+
 
 
 @Component({
   selector: 'app-map',
   standalone: true,
   imports: [],
-  template: ``,
-  providers: [LocationService],
+  template: `<div class="map-container" id="map-div" tabindex="0"></div>`,
   styles: [':host { width: 100%; height: 100%; display: block; }',
-  ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+   '.map-container { flex: grow; width: 100%; height: 100%; display: block; }']
 })
 export class MapComponent {
   @Input() map!: Map;
 
-  constructor(private elementRef: ElementRef) { }
-
-  ngAfterViewInit() {
-    this.map.setTarget(this.elementRef.nativeElement);
+  ngOnInit() {
+    this.map.setTarget("map-div");
   }
   
 }
