@@ -32,6 +32,10 @@ export class AppComponent implements OnInit {
   
   ngOnInit(): void {
     let locService = new LocationService;
+    let curView = locService.getView();
+    console.log("cur view center: " + curView.getCenter())
+    let curCoords = curView.getCenter();
+    console.log(curCoords)
     let curLocationFeature = new Feature({
       geometry: new Point(locService.getCoords('EPSG:3857')),
     })
@@ -41,17 +45,18 @@ export class AppComponent implements OnInit {
       }),
       style: new Style({
         image: new Icon({
-          anchor: [0.5, 40],
+          anchor: [0.5, 1],
           anchorXUnits: 'fraction',
-          anchorYUnits: 'pixels',
+          anchorYUnits: 'fraction',
           crossOrigin: 'anonymous',
-          src: 'https://openlayers.org/en/latest/examples/data/icon.png'
+          src: 'location-marker.png',
+          scale: 0.13
         })
       }),
       zIndex: 1
     })
     this.map = new Map({
-      view: locService.getView(),
+      view: curView,
       layers: [
         new TileLayer({
           source: new OSM(),
@@ -61,5 +66,5 @@ export class AppComponent implements OnInit {
       ]
     })
   }
-  
+
 }

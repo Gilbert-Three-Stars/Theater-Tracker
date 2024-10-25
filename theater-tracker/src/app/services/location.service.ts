@@ -32,6 +32,20 @@ export class LocationService {
     return this.view;
   }
   getCoords(projection: ProjectionLike): Array<number> {
+
+    if(navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position: GeolocationPosition) => {
+          return fromLonLat([position.coords.longitude, position.coords.latitude])
+        },
+        (err: GeolocationPositionError) => {
+          console.warn(err.message);
+          console.log("coordinates being retrieved may not reflect current location");
+          return transform(this._viewCenter, 'EPSG:3857', projection);
+        }
+      )
+    }
+    console.warn("Couldn't get navigator.geolocation");
     return transform(this._viewCenter, 'EPSG:3857', projection);
   }
 }
