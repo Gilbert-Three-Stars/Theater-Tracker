@@ -13,9 +13,11 @@ import Style from 'ol/style/Style.js';
 import Icon from 'ol/style/Icon.js'
 import Point from 'ol/geom/Point.js';
 import { GeolocationService } from '@ng-web-apis/geolocation';
+import { LocationService } from './services/location.service';
 import { take } from 'rxjs/operators';
 import { fromLonLat } from 'ol/proj';
 import View from 'ol/View';
+import { HttpClient } from '@angular/common/http';
 
 
 
@@ -30,16 +32,16 @@ import View from 'ol/View';
 export class AppComponent implements OnInit {
   title = 'theater-tracker';
   map!: Map;
-  constructor(private readonly geolocation$: GeolocationService) {}
+
+  private locService!: LocationService
+  constructor() {}
   
   ngOnInit(): void {
-    let curCoords = fromLonLat([-71.06, 42.36]);
+    
+    this.locService = new LocationService()
+    let curCoords = this.locService.getCoords();
     let curView = new View();
     curView.setZoom(5);
-    this.geolocation$.pipe(take(1)).subscribe((position): void => {
-      curCoords = fromLonLat([position.coords.longitude, position.coords.latitude])
-      curView.setZoom(12);
-    })
     curView.setCenter(curCoords)
     console.log(curCoords)
     let curLocationFeature = new Feature({
