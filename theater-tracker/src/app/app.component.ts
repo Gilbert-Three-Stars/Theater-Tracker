@@ -37,13 +37,13 @@ export class AppComponent implements OnInit {
   
   ngOnInit(): void {
     
-    let curCoords = this.locService.getCoords();
+    let coordsZoom = this.locService.getCoordsAndZoom();
     let curView = new View();
-    curView.setZoom(5);
-    curView.setCenter(curCoords)
-    console.log(curCoords)
+    console.log(coordsZoom[1])
+    curView.setZoom(coordsZoom[1]);
+    curView.setCenter(coordsZoom[0])
     let curLocationFeature = new Feature({
-      geometry: new Point(curCoords),
+      geometry: new Point(coordsZoom[0]),
     })
     let markerLayer = new VectorLayer({
       source: new VectorSource({

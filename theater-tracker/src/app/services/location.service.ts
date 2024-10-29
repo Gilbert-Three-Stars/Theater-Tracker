@@ -16,35 +16,21 @@ export class LocationService {
   getView() : View {
     return this.view;
   }
-  getCoords(): Array<number> {
+  getCoordsAndZoom(): [Array<number>, number] {
+    let zoom = 5;
     this.geolocation$.pipe(take(1)).subscribe((position) => {
       this._viewCenter = fromLonLat([position.coords.longitude, position.coords.latitude]);
       this.locAccuracy = 2;
+      zoom = 12
     })
     if(this.locAccuracy === 0) {
-      const ipObservable = this.httpClient.get('http://ip-api.com/json/')
-      ipObservable.pipe(take(1)).subscribe((response) => {
-        console.log("this is the response: ", response)
+      this.httpClient.get('http://ip-api.com/json/').pipe(take(1)).subscribe((response) => {
+        this._viewCenter = fromLonLat([Object.values(response)[8], Object.values(response)[7]])
         this.locAccuracy = 1
+        zoom = 8.5
       })
     }
-    console.log(this.locAccuracy)
-    return this._viewCenter
-    /*
-    if(navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (position: GeolocationPosition) => {
-          return fromLonLat([position.coords.longitude, position.coords.latitude])
-        },
-        (err: GeolocationPositionError) => {
-          console.warn(err.message);
-          console.log("coordinates being retrieved may not reflect current location");
-          return transform(this._viewCenter, 'EPSG:3857', projection);
-        }
-      )
-    }
-    console.warn("Couldn't get navigator.geolocation");
-    return transform(this._viewCenter, 'EPSG:3857', projection);
-    */
+    return [this._viewCenter, zoom]
+    
   }
 }
