@@ -33,12 +33,10 @@ export class AppComponent implements OnInit {
   title = 'theater-tracker';
   map!: Map;
 
-  private locService!: LocationService
-  constructor() {}
+  constructor(private locService: LocationService) {}
   
   ngOnInit(): void {
     
-    this.locService = new LocationService()
     let curCoords = this.locService.getCoords();
     let curView = new View();
     curView.setZoom(5);

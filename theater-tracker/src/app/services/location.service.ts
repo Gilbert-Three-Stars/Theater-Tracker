@@ -1,8 +1,6 @@
 import { Injectable } from '@angular/core';
 import View from 'ol/View';
-import {transform} from 'ol/proj';
 import { fromLonLat } from 'ol/proj';
-import { ProjectionLike } from 'ol/proj';
 import { GeolocationService } from '@ng-web-apis/geolocation';
 import { take } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
@@ -14,10 +12,7 @@ export class LocationService {
   protected view = new View();
   protected _viewCenter = fromLonLat([-71.06, 42.36]);
   private locAccuracy = 0;
-  private httpClient!: HttpClient
-  constructor(private readonly geolocation$: GeolocationService ) { 
-    this.geolocation$ = new GeolocationService();
-  }
+  constructor(private httpClient: HttpClient, private readonly geolocation$: GeolocationService) { }
   getView() : View {
     return this.view;
   }
