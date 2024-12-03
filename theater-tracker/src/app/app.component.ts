@@ -14,10 +14,6 @@ import Icon from 'ol/style/Icon.js'
 import Point from 'ol/geom/Point.js';
 import View from 'ol/View';
 
-
-
-
-
 @Component({
   selector: 'app-root',
   standalone: true,
@@ -33,7 +29,6 @@ export class AppComponent implements OnInit {
   constructor(private locService: LocationService) {}
   
   ngOnInit(): void {
-    
     let coordsZoom = this.locService.getCoordsAndZoom();
     let curView = new View();
     console.log(coordsZoom[1])
@@ -72,7 +67,8 @@ export class AppComponent implements OnInit {
     let curClickFeature = new Feature({
       geometry: new Point(this.map.getCoordinateFromPixel(event.pixel))
     })
-    this.vectorSource.clear(false)
+    // TODO: take another look at this once you can add theater markers to the map.
+    this.vectorSource.clear(false) 
     this.vectorSource.addFeature(curClickFeature)
   }
 
