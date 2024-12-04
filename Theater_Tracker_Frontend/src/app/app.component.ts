@@ -6,12 +6,12 @@ import { LocationService } from './services/location.service';
 import Map from 'ol/Map';
 import TileLayer from 'ol/layer/Tile';
 import OSM from 'ol/source/OSM';
-import VectorLayer from 'ol/layer/Vector.js';
-import VectorSource from 'ol/source/Vector.js';
-import Feature from 'ol/Feature.js';
-import Style from 'ol/style/Style.js';
-import Icon from 'ol/style/Icon.js'
-import Point from 'ol/geom/Point.js';
+import VectorLayer from 'ol/layer/Vector';
+import VectorSource from 'ol/source/Vector';
+import Feature from 'ol/Feature';
+import Style from 'ol/style/Style';
+import Icon from 'ol/style/Icon'
+import Point from 'ol/geom/Point';
 import View from 'ol/View';
 
 @Component({
