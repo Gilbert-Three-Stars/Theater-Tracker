@@ -12,6 +12,7 @@ marshmallow = "*"
 flask-cors = "*"
 apscheduler = "*"
 beautifulsoup4 = "*"
+requests = "*"
 
 [dev-packages]
 
