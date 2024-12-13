@@ -11,6 +11,7 @@ flask-migrate = "*"
 marshmallow = "*"
 flask-cors = "*"
 apscheduler = "*"
+beautifulsoup4 = "*"
 
 [dev-packages]
 
