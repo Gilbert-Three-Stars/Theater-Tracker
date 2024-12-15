@@ -3,6 +3,7 @@ import { RouterOutlet } from '@angular/router';
 import { MapComponent } from './components/map/map.component';
 import { CommonModule } from '@angular/common';
 import { LocationService } from './services/location.service';
+import { TheaterlocationService } from './services/theaterlocation.service';
 import Map from 'ol/Map';
 import TileLayer from 'ol/layer/Tile';
 import OSM from 'ol/source/OSM';
@@ -26,9 +27,10 @@ export class AppComponent implements OnInit {
   map!: Map;
   private vectorSource = new VectorSource();
 
-  constructor(private locService: LocationService) {}
+  constructor(private locService: LocationService, private theaterLocService: TheaterlocationService) {}
   
   ngOnInit(): void {
+    this.theaterLocService.getTheaters();
     let coordsZoom = this.locService.getCoordsAndZoom();
     let curView = new View();
     console.log(coordsZoom[1])
