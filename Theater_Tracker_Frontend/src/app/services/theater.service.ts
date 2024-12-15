@@ -8,15 +8,13 @@ import { Theater } from '../models/theater.model'
 @Injectable({
   providedIn: 'root'
 })
-export class TheaterlocationService {
+export class TheaterService {
   private theaters: Theater[] = []
   constructor(private httpClient: HttpClient) { }
 
 
   getTheaters(): Array<Theater>{
-      this.httpClient.get(`${environment.API_URL}/theaters`).subscribe(json => {
-      // TODO: update theaters based on the keys
-      
+      this.httpClient.get(`${environment.API_URL}/theaters`).subscribe(json => {      
       for (let theaterStr in Object.values(json)) {
         let jsonObj = JSON.parse(theaterStr)
         let theaterObj = new Theater(
