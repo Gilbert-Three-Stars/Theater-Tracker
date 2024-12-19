@@ -4,6 +4,7 @@ import { MapComponent } from './components/map/map.component';
 import { CommonModule } from '@angular/common';
 import { LocationService } from './services/location.service';
 import { TheaterService } from './services/theater.service';
+import { Theater } from './models/theater.model';
 import Map from 'ol/Map';
 import TileLayer from 'ol/layer/Tile';
 import OSM from 'ol/source/OSM';
@@ -14,6 +15,11 @@ import Style from 'ol/style/Style';
 import Icon from 'ol/style/Icon'
 import Point from 'ol/geom/Point';
 import View from 'ol/View';
+import { Vector } from 'ol/source';
+import { fromLonLat } from 'ol/proj';
+import { LineString } from 'ol/geom';
+import { getLength } from 'ol/sphere';
+
 
 @Component({
   selector: 'app-root',
@@ -25,41 +31,63 @@ import View from 'ol/View';
 export class AppComponent implements OnInit {
   title = 'theater-tracker';
   map!: Map;
-  private vectorSource = new VectorSource();
+  private markerVectorSource = new VectorSource();
+  private theaterVectorSource = new VectorSource();
 
-  constructor(private locService: LocationService, private theaterLocService: TheaterService) {}
+  constructor(private locService: LocationService, private theaterService: TheaterService) {}
   
   ngOnInit(): void {
-    this.theaterLocService.getTheaters();
-    let coordsZoom = this.locService.getCoordsAndZoom();
-    let curView = new View();
-    console.log(coordsZoom[1])
-    curView.setZoom(coordsZoom[1]);
-    curView.setCenter(coordsZoom[0])
-    let markerLayer = new VectorLayer({
-      source: this.vectorSource,
-      style: new Style({
-        image: new Icon({
-          anchor: [0.5, 0.8],
-          anchorXUnits: 'fraction',
-          anchorYUnits: 'fraction',
-          crossOrigin: 'anonymous',
-          src: 'location-marker.png',
-          scale: 0.13
-        })
-      }),
-      zIndex: 1
-    })
-    this.map = new Map({
-      view: curView,
-      layers: [
-        new TileLayer({
-          source: new OSM(),
-          zIndex: 0,
+    // since the observable doesnt happen immediately, it happens after 
+    // the map gets populated.
+    // TODO: add to the map in the subscribe
+    this.theaterService.getTheaters().subscribe(theaters => {
+      let coordsZoom = this.locService.getCoordsAndZoom();
+      let curView = new View();
+      curView.setZoom(coordsZoom[1]);
+      curView.setCenter(coordsZoom[0]);
+      this.populateTheaters(theaters)
+      console.log(this.theaterVectorSource.getFeatures().length)
+      let theaterLayer = new VectorLayer({
+        source: this.theaterVectorSource,
+        style: new Style({
+          image: new Icon({
+            anchor: [0.5, 0.5],
+            anchorXUnits: 'fraction',
+            anchorYUnits: 'fraction',
+            crossOrigin: 'anonymous',
+            src: 'reddotmarker.png',
+            scale: 0.025
+          })
         }),
-        markerLayer
-      ]
-    })
+        zIndex: 1
+      })
+      let markerLayer = new VectorLayer({
+        source: this.markerVectorSource,
+        style: new Style({
+          image: new Icon({
+            anchor: [0.5, 0.8],
+            anchorXUnits: 'fraction',
+            anchorYUnits: 'fraction',
+            crossOrigin: 'anonymous',
+            src: 'location-marker.png',
+            scale: 0.13
+          })
+        }),
+        zIndex: 2
+      })
+      this.map = new Map({
+        view: curView,
+        layers: [
+          new TileLayer({
+            source: new OSM(),
+            zIndex: 0,
+          }),
+          theaterLayer,
+          markerLayer,
+        ]
+      })
+      
+    });
     this.map.on(["click"], (event) => this.mapClicked(event))
   }
 
@@ -69,9 +97,22 @@ export class AppComponent implements OnInit {
     let curClickFeature = new Feature({
       geometry: new Point(this.map.getCoordinateFromPixel(event.pixel))
     })
-    // TODO: take another look at this once you can add theater markers to the map.
-    this.vectorSource.clear(false) 
-    this.vectorSource.addFeature(curClickFeature)
+    this.markerVectorSource.clear(false) 
+    this.markerVectorSource.addFeature(curClickFeature)
   }
+
+  populateTheaters(theaters: Theater[]) {
+    let theaterFeatureArr: Array<Feature> = new Array();
+    for(let theater of theaters) {
+      let curTheaterFeature = new Feature({
+        geometry: new Point(fromLonLat([theater['latitude'], theater['longitude']]))
+      })
+      theaterFeatureArr.push(curTheaterFeature)
+    }
+    this.theaterVectorSource.clear(false)
+    this.theaterVectorSource.addFeatures(theaterFeatureArr)
+  }
+
+  
 
 }

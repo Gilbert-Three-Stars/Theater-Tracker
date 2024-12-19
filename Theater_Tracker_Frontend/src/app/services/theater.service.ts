@@ -1,20 +1,37 @@
 import { Injectable } from '@angular/core';
 import { environment } from '../../environments/env';
-import Map from 'ol/Map';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, map } from 'rxjs';
 import { Theater } from '../models/theater.model'
+
+
 
 @Injectable({
   providedIn: 'root'
 })
 export class TheaterService {
-  private theaters: Theater[] = []
   constructor(private httpClient: HttpClient) { }
 
+  testObservable(): Observable<any> {
+    const testObs = new Observable((subscriber) => {
+      subscriber.next(1)
+    })
+    return testObs
+  }
 
-  getTheaters(): Array<Theater>{
-      this.httpClient.get(`${environment.API_URL}/theaters`).subscribe(json => {      
+
+  getTheaters(): Observable<Theater[]> {
+    return this.httpClient.get(`${environment.API_URL}/theaters`).pipe(map(json => {
+      let counter = 0
+      let theaters: Theater[] = new Array<Theater>;
+      for (let theaterObj of Object.values(json)) {
+        theaters.push(theaterObj)
+        counter++
+      }
+      return theaters
+    }))
+    /*
+    this.httpClient.get(`${environment.API_URL}/theaters`).subscribe(json => {      
       for (let theaterStr in Object.values(json)) {
         let jsonObj = JSON.parse(theaterStr)
         let theaterObj = new Theater(
@@ -27,8 +44,11 @@ export class TheaterService {
         )
         this.theaters.push(theaterObj)
       }
-      
     })
+    if(this.theaters.length === 0) {
+      console.log("Wasn't able to get theaters")
+    }
     return this.theaters
+    */
   }
 }
