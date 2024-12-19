@@ -15,7 +15,6 @@ import Style from 'ol/style/Style';
 import Icon from 'ol/style/Icon'
 import Point from 'ol/geom/Point';
 import View from 'ol/View';
-import { Vector } from 'ol/source';
 import { fromLonLat } from 'ol/proj';
 import { LineString } from 'ol/geom';
 import { getLength } from 'ol/sphere';
@@ -37,9 +36,6 @@ export class AppComponent implements OnInit {
   constructor(private locService: LocationService, private theaterService: TheaterService) {}
   
   ngOnInit(): void {
-    // since the observable doesnt happen immediately, it happens after 
-    // the map gets populated.
-    // TODO: add to the map in the subscribe
     this.theaterService.getTheaters().subscribe(theaters => {
       let coordsZoom = this.locService.getCoordsAndZoom();
       let curView = new View();
