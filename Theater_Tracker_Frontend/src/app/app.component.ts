@@ -42,7 +42,6 @@ export class AppComponent implements OnInit {
       curView.setZoom(coordsZoom[1]);
       curView.setCenter(coordsZoom[0]);
       this.populateTheaters(theaters)
-      console.log(this.theaterVectorSource.getFeatures().length)
       let theaterLayer = new VectorLayer({
         source: this.theaterVectorSource,
         style: new Style({
@@ -55,7 +54,8 @@ export class AppComponent implements OnInit {
             scale: 0.025
           })
         }),
-        zIndex: 1
+        zIndex: 1,
+        opacity: 0.6
       })
       let markerLayer = new VectorLayer({
         source: this.markerVectorSource,
@@ -100,15 +100,27 @@ export class AppComponent implements OnInit {
   populateTheaters(theaters: Theater[]) {
     let theaterFeatureArr: Array<Feature> = new Array();
     for(let theater of theaters) {
+      let curGeom = new Point(fromLonLat([theater['latitude'], theater['longitude']]))
+      console.log(curGeom.getProperties())
+      curGeom.scale(10/theater['numScreens'])
+      console.log(curGeom.getProperties())
       let curTheaterFeature = new Feature({
-        geometry: new Point(fromLonLat([theater['latitude'], theater['longitude']]))
+        geometry: curGeom
       })
+      curTheaterFeature.setStyle(new Style({
+        image: new Icon({
+          anchor: [0.5, 0.5],
+          anchorXUnits: 'fraction',
+          anchorYUnits: 'fraction',
+          crossOrigin: 'anonymous',
+          src: 'reddotmarker.png',
+          scale: .0125 + .0125 * (theater['numScreens']/10)
+        })
+      }))
       theaterFeatureArr.push(curTheaterFeature)
     }
     this.theaterVectorSource.clear(false)
     this.theaterVectorSource.addFeatures(theaterFeatureArr)
   }
-
-  
 
 }
