@@ -16,6 +16,7 @@ import Icon from 'ol/style/Icon'
 import Point from 'ol/geom/Point';
 import View from 'ol/View';
 import { fromLonLat } from 'ol/proj';
+import { Vector } from 'ol/source';
 
 
 
@@ -31,7 +32,9 @@ export class AppComponent implements OnInit {
   map!: Map;
   private markerVectorSource = new VectorSource();
   private theaterVectorSource = new VectorSource();
-
+  private radiusVectorSource = new VectorSource(); 
+  theaterCircleScale = 0.075
+  
   constructor(private locService: LocationService, private theaterService: TheaterService) {}
   
   ngOnInit(): void {
@@ -68,7 +71,22 @@ export class AppComponent implements OnInit {
             scale: 0.13
           })
         }),
-        zIndex: 2
+        zIndex: 3
+      })
+      let radiusLayer = new VectorLayer({
+        source: this.radiusVectorSource,
+        style: new Style({
+          image: new Icon({
+            anchor: [0.5, 0.5],
+            anchorXUnits: 'fraction', 
+            anchorYUnits: 'fraction',
+            crossOrigin: 'anonymous',
+            src: 'greencircleblackborder.png',
+            scale: this.theaterCircleScale
+          })
+        }),
+        zIndex: 2,
+        opacity: 0.5
       })
       this.map = new Map({
         view: curView,
@@ -79,6 +97,7 @@ export class AppComponent implements OnInit {
           }),
           theaterLayer,
           markerLayer,
+          radiusLayer
         ]
       })
       
@@ -92,8 +111,12 @@ export class AppComponent implements OnInit {
     let curClickFeature = new Feature({
       geometry: new Point(this.map.getCoordinateFromPixel(event.pixel))
     })
-    this.markerVectorSource.clear(false) 
-    this.markerVectorSource.addFeature(curClickFeature)
+    // UNCOMMENT THE MARKERVECTORSOURCE LINES TO BRING BACK THE LOCATION MARKER
+
+    // this.markerVectorSource.clear(false) 
+    this.radiusVectorSource.clear(false)
+    // this.markerVectorSource.addFeature(curClickFeature)
+    this.radiusVectorSource.addFeature(curClickFeature)
   }
 
   populateTheaters(theaters: Theater[]) {
