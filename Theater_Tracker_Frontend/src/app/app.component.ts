@@ -16,8 +16,7 @@ import Icon from 'ol/style/Icon'
 import Point from 'ol/geom/Point';
 import View from 'ol/View';
 import { fromLonLat } from 'ol/proj';
-import { LineString } from 'ol/geom';
-import { getLength } from 'ol/sphere';
+
 
 
 @Component({
