@@ -30,19 +30,34 @@ import { Vector } from 'ol/source';
 export class AppComponent implements OnInit {
   title = 'theater-tracker';
   map!: Map;
+  private static defaultResolution = 432.39312827356855;
   private markerVectorSource = new VectorSource();
   private theaterVectorSource = new VectorSource();
-  private radiusVectorSource = new VectorSource(); 
-  theaterCircleScale = 0.075
+  private markerRadiusVectorSource = new VectorSource();
+  private mapView = new View();
+  private markerRadiusIcon = new Icon({
+    anchor: [0.5, 0.5],
+    anchorXUnits: 'fraction', 
+    anchorYUnits: 'fraction',
+    crossOrigin: 'anonymous',
+    src: 'greencircleblackborder.png',
+    scale: .075
+  })
+  // use this.mapView.getZoom() to get the current zoom
+  // TODO: find a way to make it so that the theaterCircleScale gets updated every single
+  // time the zoom of the view changes.
+  // additionally, we need to find a way that the actual literal size doesn't change
+  // when you zoom in/out
   
   constructor(private locService: LocationService, private theaterService: TheaterService) {}
   
   ngOnInit(): void {
+    // (.075 * this.defaultResolution)/this.mapView.getResolution()
     this.theaterService.getTheaters().subscribe(theaters => {
       let coordsZoom = this.locService.getCoordsAndZoom();
-      let curView = new View();
-      curView.setZoom(coordsZoom[1]);
-      curView.setCenter(coordsZoom[0]);
+      this.mapView.setZoom(coordsZoom[1]);
+      this.mapView.setCenter(coordsZoom[0]);
+      
       this.populateTheaters(theaters)
       let theaterLayer = new VectorLayer({
         source: this.theaterVectorSource,
@@ -74,22 +89,15 @@ export class AppComponent implements OnInit {
         zIndex: 3
       })
       let radiusLayer = new VectorLayer({
-        source: this.radiusVectorSource,
+        source: this.markerRadiusVectorSource,
         style: new Style({
-          image: new Icon({
-            anchor: [0.5, 0.5],
-            anchorXUnits: 'fraction', 
-            anchorYUnits: 'fraction',
-            crossOrigin: 'anonymous',
-            src: 'greencircleblackborder.png',
-            scale: this.theaterCircleScale
-          })
+          image: this.markerRadiusIcon
         }),
         zIndex: 2,
-        opacity: 0.5
+        opacity: 0.3
       })
       this.map = new Map({
-        view: curView,
+        view: this.mapView,
         layers: [
           new TileLayer({
             source: new OSM(),
@@ -102,7 +110,12 @@ export class AppComponent implements OnInit {
       })
       
     });
+    this.mapView.on("change:resolution", (event) => this.resolutionChanged(event))
     this.map.on(["click"], (event) => this.mapClicked(event))
+  }
+
+  resolutionChanged(event: any) {
+    this.markerRadiusIcon.setScale((.075 * AppComponent.defaultResolution)/this.mapView.getResolution()!)
   }
 
   // when the map is clicked, the current location marker is removed (if there is one)
@@ -114,18 +127,17 @@ export class AppComponent implements OnInit {
     // UNCOMMENT THE MARKERVECTORSOURCE LINES TO BRING BACK THE LOCATION MARKER
 
     // this.markerVectorSource.clear(false) 
-    this.radiusVectorSource.clear(false)
+    this.markerRadiusVectorSource.clear(false)
     // this.markerVectorSource.addFeature(curClickFeature)
-    this.radiusVectorSource.addFeature(curClickFeature)
+    this.markerRadiusVectorSource.addFeature(curClickFeature)
+    console.log(this.mapView.getResolution())
   }
 
   populateTheaters(theaters: Theater[]) {
     let theaterFeatureArr: Array<Feature> = new Array();
     for(let theater of theaters) {
       let curGeom = new Point(fromLonLat([theater['latitude'], theater['longitude']]))
-      console.log(curGeom.getProperties())
       curGeom.scale(10/theater['numScreens'])
-      console.log(curGeom.getProperties())
       let curTheaterFeature = new Feature({
         geometry: curGeom
       })
