@@ -113,8 +113,8 @@ export class AppComponent implements OnInit {
           anchorXUnits: 'fraction',
           anchorYUnits: 'fraction',
           crossOrigin: 'anonymous',
-          src: 'reddotmarker.png',
-          scale: .0125 + .0125 * (theater['numScreens']/10)
+          src: 'redcircleblackborder.png',
+          scale: (.0125 + .0125 * (theater['numScreens']/10))/2
         })
       }))
       theaterFeatureArr.push(curTheaterFeature)
