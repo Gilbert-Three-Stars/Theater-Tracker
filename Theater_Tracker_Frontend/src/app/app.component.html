@@ -2,7 +2,9 @@
   <div class="title"> Theater Tracker </div>
 </header>
 <main>
-  <div class="left-bar"></div>
+  <div class="left-bar">
+    <app-markerslider [markerRadiusIcon]="markerRadiusIcon"></app-markerslider>
+  </div>
   <app-map [map]="map"></app-map>
 </main>
 <footer>

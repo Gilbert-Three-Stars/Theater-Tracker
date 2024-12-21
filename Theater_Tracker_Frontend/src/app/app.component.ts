@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { MapComponent } from './components/map/map.component';
+import { MarkersliderComponent } from './components/markerslider/markerslider.component';
 import { CommonModule } from '@angular/common';
 import { LocationService } from './services/location.service';
 import { TheaterService } from './services/theater.service';
@@ -12,7 +13,7 @@ import VectorLayer from 'ol/layer/Vector';
 import VectorSource from 'ol/source/Vector';
 import Feature from 'ol/Feature';
 import Style from 'ol/style/Style';
-import Icon from 'ol/style/Icon'
+import Icon from 'ol/style/Icon';
 import Point from 'ol/geom/Point';
 import View from 'ol/View';
 import { fromLonLat } from 'ol/proj';
@@ -23,19 +24,19 @@ import { Vector } from 'ol/source';
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, MapComponent, CommonModule],
+  imports: [RouterOutlet, MapComponent, MarkersliderComponent, CommonModule],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',
 })
 export class AppComponent implements OnInit {
   title = 'theater-tracker';
   map!: Map;
-  private static defaultResolution = 432.39312827356855;
+  private static defaultResolution = 108.09828206839214;
   private markerVectorSource = new VectorSource();
-  private theaterVectorSource = new VectorSource();
+  private theaterVectorSource = new VectorSource(); 
   private markerRadiusVectorSource = new VectorSource();
   private mapView = new View();
-  private markerRadiusIcon = new Icon({
+  markerRadiusIcon = new Icon({
     anchor: [0.5, 0.5],
     anchorXUnits: 'fraction', 
     anchorYUnits: 'fraction',

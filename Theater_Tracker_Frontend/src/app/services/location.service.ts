@@ -21,7 +21,7 @@ export class LocationService {
     if(zoom === 5) { // if we haven't found a location using geolocation
       this.httpClient.get('http://ip-api.com/json/').pipe(take(1)).subscribe((response) => {
         this._viewCenter = fromLonLat([Object.values(response)[8], Object.values(response)[7]])
-        zoom = 8.5
+        zoom = 10.5
       })
     }
     return [this._viewCenter, zoom]
