@@ -1,11 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, afterNextRender, Inject, afterRender } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
+import { CommonModule } from '@angular/common';
 import { MapComponent } from './components/map/map.component';
 import { MarkersliderComponent } from './components/markerslider/markerslider.component';
-import { CommonModule } from '@angular/common';
 import { LocationService } from './services/location.service';
 import { TheaterService } from './services/theater.service';
 import { Theater } from './models/theater.model';
+import { SimpleView } from './models/simpleview.model';
 import Map from 'ol/Map';
 import TileLayer from 'ol/layer/Tile';
 import OSM from 'ol/source/OSM';
@@ -31,7 +32,7 @@ export class AppComponent implements OnInit {
   title = 'theater-tracker';
   map!: Map;
   mapView = new View();
-  radiusConstant = 0.075
+  radiusConstant = 0.075;
   private static defaultResolution = 108.09828206839214;
   private markerVectorSource = new VectorSource();
   private theaterVectorSource = new VectorSource(); 
@@ -45,14 +46,29 @@ export class AppComponent implements OnInit {
     scale: this.radiusConstant
   })
   
-  constructor(private locService: LocationService, private theaterService: TheaterService) {}
+  constructor(private locService: LocationService, private theaterService: TheaterService) {
+    let ssrView = this.locService.getCoordsAndZoom();
+
+    afterNextRender(() => {
+      let afterRenderView = this.locService.getCoordsAndZoom();
+      console.log('ssrView:')
+      ssrView.printView()
+      console.log('afterRenderView:')
+      afterRenderView.printView()
+      this.mapView.adjustZoom(afterRenderView.getZoom() - ssrView.getZoom());
+      this.mapView.adjustCenter(
+        [afterRenderView.getCoords()[0] - ssrView.getCoords()[0], 
+        afterRenderView.getCoords()[1] - ssrView.getCoords()[1]]);
+      
+    })
+  }
+  
   
   ngOnInit(): void {
     this.theaterService.getTheaters().subscribe(theaters => {
-      let coordsZoom = this.locService.getCoordsAndZoom();
-      this.mapView.setZoom(coordsZoom[1]);
-      this.mapView.setCenter(coordsZoom[0]);
-      
+      let coordsZoom = this.locService.getCoordsAndZoom()
+      this.mapView.setZoom(coordsZoom.getZoom());
+      this.mapView.setCenter(coordsZoom.getCoords());
       this.populateTheaters(theaters)
       let theaterLayer = new VectorLayer({
         source: this.theaterVectorSource,
