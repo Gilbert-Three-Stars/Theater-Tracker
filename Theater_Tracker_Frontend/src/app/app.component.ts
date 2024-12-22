@@ -17,7 +17,6 @@ import Icon from 'ol/style/Icon';
 import Point from 'ol/geom/Point';
 import View from 'ol/View';
 import { fromLonLat } from 'ol/proj';
-import { Vector } from 'ol/source';
 
 
 
@@ -31,29 +30,24 @@ import { Vector } from 'ol/source';
 export class AppComponent implements OnInit {
   title = 'theater-tracker';
   map!: Map;
+  mapView = new View();
+  radiusConstant = 0.075
   private static defaultResolution = 108.09828206839214;
   private markerVectorSource = new VectorSource();
   private theaterVectorSource = new VectorSource(); 
   private markerRadiusVectorSource = new VectorSource();
-  private mapView = new View();
-  markerRadiusIcon = new Icon({
+  private markerRadiusIcon = new Icon({
     anchor: [0.5, 0.5],
     anchorXUnits: 'fraction', 
     anchorYUnits: 'fraction',
     crossOrigin: 'anonymous',
     src: 'greencircleblackborder.png',
-    scale: .075
+    scale: this.radiusConstant
   })
-  // use this.mapView.getZoom() to get the current zoom
-  // TODO: find a way to make it so that the theaterCircleScale gets updated every single
-  // time the zoom of the view changes.
-  // additionally, we need to find a way that the actual literal size doesn't change
-  // when you zoom in/out
   
   constructor(private locService: LocationService, private theaterService: TheaterService) {}
   
   ngOnInit(): void {
-    // (.075 * this.defaultResolution)/this.mapView.getResolution()
     this.theaterService.getTheaters().subscribe(theaters => {
       let coordsZoom = this.locService.getCoordsAndZoom();
       this.mapView.setZoom(coordsZoom[1]);
@@ -116,7 +110,7 @@ export class AppComponent implements OnInit {
   }
 
   resolutionChanged(event: any) {
-    this.markerRadiusIcon.setScale((.075 * AppComponent.defaultResolution)/this.mapView.getResolution()!)
+    this.markerRadiusIcon.setScale((this.radiusConstant * AppComponent.defaultResolution)/this.mapView.getResolution()!)
   }
 
   // when the map is clicked, the current location marker is removed (if there is one)
