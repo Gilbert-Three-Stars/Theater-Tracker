@@ -34,7 +34,6 @@ export class AppComponent implements OnInit {
   mapView = new View();
   radiusScaler: number = 0.077090340142445;
   private static defaultResolution = 108.09828206839214;
-  private markerVectorSource = new VectorSource();
   private theaterVectorSource = new VectorSource(); 
   private markerRadiusVectorSource = new VectorSource();
   private markerRadiusIcon = new Icon({
@@ -72,20 +71,7 @@ export class AppComponent implements OnInit {
         opacity: 0.6,
         maxResolution: 2800
       })
-      let markerLayer = new VectorLayer({
-        source: this.markerVectorSource,
-        style: new Style({
-          image: new Icon({
-            anchor: [0.5, 0.8],
-            anchorXUnits: 'fraction',
-            anchorYUnits: 'fraction',
-            crossOrigin: 'anonymous',
-            src: 'location-marker.png',
-            scale: 0.13
-          })
-        }),
-        zIndex: 3
-      })
+      
       let radiusLayer = new VectorLayer({
         source: this.markerRadiusVectorSource,
         style: new Style({
@@ -102,7 +88,6 @@ export class AppComponent implements OnInit {
             zIndex: 0,
           }),
           theaterLayer,
-          markerLayer,
           radiusLayer
         ]
       })
@@ -130,11 +115,7 @@ export class AppComponent implements OnInit {
     let curClickFeature = new Feature({
       geometry: new Point(this.map.getCoordinateFromPixel(event.pixel))
     })
-    // UNCOMMENT THE MARKERVECTORSOURCE LINES TO BRING BACK THE LOCATION MARKER
-
-    // this.markerVectorSource.clear(false) 
     this.markerRadiusVectorSource.clear(false)
-    // this.markerVectorSource.addFeature(curClickFeature)
     this.markerRadiusVectorSource.addFeature(curClickFeature)
   }
 
