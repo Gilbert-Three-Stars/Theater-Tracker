@@ -68,16 +68,6 @@ export class AppComponent implements OnInit {
       this.populateTheaters(theaters)
       let theaterLayer = new VectorLayer({
         source: this.theaterVectorSource,
-        style: new Style({
-          image: new Icon({
-            anchor: [0.5, 0.5],
-            anchorXUnits: 'fraction',
-            anchorYUnits: 'fraction',
-            crossOrigin: 'anonymous',
-            src: 'reddotmarker.png',
-            scale: 0.025
-          })
-        }),
         zIndex: 1,
         opacity: 0.6,
         maxResolution: 2800
