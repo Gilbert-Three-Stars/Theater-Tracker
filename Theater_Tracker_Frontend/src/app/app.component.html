@@ -3,7 +3,7 @@
 </header>
 <main>
   <div class="left-bar">
-    <app-markerslider [radiusConstant]="radiusConstant" [mapView]="mapView"></app-markerslider>
+    <app-markerslider (radiusChanged)="changeMarkerScale($event)"></app-markerslider>
   </div>
   <app-map [map]="map"></app-map>
 </main>

@@ -3,8 +3,10 @@
 	<ngx-slider [(value)]="value" [options]="options"></ngx-slider>
 </div>
 -->
-<div style="height: 500px;">
-    <input type="range" value="15" min="0" max="350" step="5"/>
+<div style="height: 20px;">
+    <label for="radius">Radius (km): {{displayRadius}}</label>
 </div>
+<input type="range" #slider min="0" max="350" value="curRadius" step="any" id="radius" name="radius" [(ngModel)]="curRadius" class="slider" (change)="onRadiusChange(curRadius)"/>
+
 
 

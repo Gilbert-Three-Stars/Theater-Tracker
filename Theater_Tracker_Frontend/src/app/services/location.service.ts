@@ -34,7 +34,11 @@ export class LocationService {
         this.zoom = 10.5
       })
     }
-    let curView = new SimpleView(this.zoom, this._viewCenter)
+    let openLayersView = new View();
+    openLayersView.setCenter(this._viewCenter);
+    openLayersView.setZoom(this.zoom);
+    let viewResolution = openLayersView.getResolutionForZoom(this.zoom);
+    let curView = new SimpleView(this.zoom, this._viewCenter, viewResolution);
     return curView
   }
 

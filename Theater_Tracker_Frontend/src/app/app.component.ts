@@ -6,7 +6,6 @@ import { MarkersliderComponent } from './components/markerslider/markerslider.co
 import { LocationService } from './services/location.service';
 import { TheaterService } from './services/theater.service';
 import { Theater } from './models/theater.model';
-import { SimpleView } from './models/simpleview.model';
 import Map from 'ol/Map';
 import TileLayer from 'ol/layer/Tile';
 import OSM from 'ol/source/OSM';
@@ -32,7 +31,8 @@ export class AppComponent implements OnInit {
   title = 'theater-tracker';
   map!: Map;
   mapView = new View();
-  radiusConstant = 0.075;
+  
+  radiusScaler: number = 0.077090340142445;
   private static defaultResolution = 108.09828206839214;
   private markerVectorSource = new VectorSource();
   private theaterVectorSource = new VectorSource(); 
@@ -43,7 +43,7 @@ export class AppComponent implements OnInit {
     anchorYUnits: 'fraction',
     crossOrigin: 'anonymous',
     src: 'greencircleblackborder.png',
-    scale: this.radiusConstant
+    scale: this.radiusScaler
   })
   
   constructor(private locService: LocationService, private theaterService: TheaterService) {
@@ -51,10 +51,6 @@ export class AppComponent implements OnInit {
 
     afterNextRender(() => {
       let afterRenderView = this.locService.getCoordsAndZoom();
-      console.log('ssrView:')
-      ssrView.printView()
-      console.log('afterRenderView:')
-      afterRenderView.printView()
       this.mapView.adjustZoom(afterRenderView.getZoom() - ssrView.getZoom());
       this.mapView.adjustCenter(
         [afterRenderView.getCoords()[0] - ssrView.getCoords()[0], 
@@ -126,7 +122,14 @@ export class AppComponent implements OnInit {
   }
 
   resolutionChanged(event: any) {
-    this.markerRadiusIcon.setScale((this.radiusConstant * AppComponent.defaultResolution)/this.mapView.getResolution()!)
+    this.markerRadiusIcon.setScale((this.radiusScaler * AppComponent.defaultResolution)/this.mapView.getResolution()!)
+  }
+  // convert radius to scale
+  // update marker scale accordingly
+  changeMarkerScale(newRadius: number) {
+    let newScale = newRadius/(0.3*this.mapView.getResolution()!);
+    this.markerRadiusIcon.setScale(newScale)
+    this.markerRadiusVectorSource.changed();
   }
 
   // when the map is clicked, the current location marker is removed (if there is one)
@@ -141,7 +144,6 @@ export class AppComponent implements OnInit {
     this.markerRadiusVectorSource.clear(false)
     // this.markerVectorSource.addFeature(curClickFeature)
     this.markerRadiusVectorSource.addFeature(curClickFeature)
-    console.log(this.mapView.getResolution())
   }
 
   populateTheaters(theaters: Theater[]) {
