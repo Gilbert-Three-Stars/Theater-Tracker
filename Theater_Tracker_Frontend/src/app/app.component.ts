@@ -27,11 +27,11 @@ import { fromLonLat } from 'ol/proj';
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',
 })
+//TODO: Make all the theater features clickable
 export class AppComponent implements OnInit {
   title = 'theater-tracker';
   map!: Map;
   mapView = new View();
-  
   radiusScaler: number = 0.077090340142445;
   private static defaultResolution = 108.09828206839214;
   private markerVectorSource = new VectorSource();
@@ -79,7 +79,8 @@ export class AppComponent implements OnInit {
           })
         }),
         zIndex: 1,
-        opacity: 0.6
+        opacity: 0.6,
+        maxResolution: 2800
       })
       let markerLayer = new VectorLayer({
         source: this.markerVectorSource,
@@ -122,7 +123,8 @@ export class AppComponent implements OnInit {
   }
 
   resolutionChanged(event: any) {
-    this.markerRadiusIcon.setScale((this.radiusScaler * AppComponent.defaultResolution)/this.mapView.getResolution()!)
+    this.markerRadiusIcon.setScale((this.radiusScaler * AppComponent.defaultResolution)/this.mapView.getResolution()!);
+    console.log(this.mapView.getResolution()) // 2800
   }
   // convert radius to scale
   // update marker scale accordingly
