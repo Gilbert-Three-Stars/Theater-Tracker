@@ -16,6 +16,8 @@ import Style from 'ol/style/Style';
 import Icon from 'ol/style/Icon';
 import Point from 'ol/geom/Point';
 import View from 'ol/View';
+import Select from 'ol/interaction/Select.js';
+import { pointerMove } from 'ol/events/condition';
 import { fromLonLat } from 'ol/proj';
 
 
@@ -93,8 +95,31 @@ export class AppComponent implements OnInit {
       })
       
     });
-    this.mapView.on("change:resolution", (event) => this.resolutionChanged(event))
-    this.map.on(["click"], (event) => this.mapClicked(event))
+    let hoverSelect = new Select({
+      condition: pointerMove,
+      style: (feature) => {
+        if(feature instanceof Feature) {
+          let curStyle = feature.getStyle();
+          if(curStyle instanceof Style) {
+            return new Style({
+              image: new Icon({
+                anchor: [0.5, 0.5],
+                anchorXUnits: 'fraction',
+                anchorYUnits: 'fraction',
+                crossOrigin: 'anonymous',
+                src: 'theatericonhover.png',
+                scale: curStyle.getImage()?.getScale()
+              })
+            })
+          }
+        }
+        return undefined;
+      }
+    });
+    // TODO: Figure out why the color flickers when you hover.
+    this.map.addInteraction(hoverSelect)    
+    this.mapView.on("change:resolution", (event) => this.resolutionChanged(event));
+    this.map.on(["click"], (event) => this.mapClicked(event));
   }
 
   resolutionChanged(event: any) {
@@ -125,7 +150,8 @@ export class AppComponent implements OnInit {
       let curGeom = new Point(fromLonLat([theater['latitude'], theater['longitude']]))
       curGeom.scale(10/theater['numScreens'])
       let curTheaterFeature = new Feature({
-        geometry: curGeom
+        geometry: curGeom,
+        name: theater['name']
       })
       curTheaterFeature.setStyle(new Style({
         image: new Icon({
@@ -140,7 +166,10 @@ export class AppComponent implements OnInit {
       theaterFeatureArr.push(curTheaterFeature)
     }
     this.theaterVectorSource.clear(false)
-    this.theaterVectorSource.addFeatures(theaterFeatureArr)
+    this.theaterVectorSource.addFeatures(theaterFeatureArr);
   }
+
+  
+
 
 }
