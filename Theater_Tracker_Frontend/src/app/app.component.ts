@@ -29,7 +29,6 @@ import { fromLonLat } from 'ol/proj';
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',
 })
-//TODO: Make all the theater features clickable
 export class AppComponent implements OnInit {
   title = 'theater-tracker';
   map!: Map;
@@ -117,6 +116,7 @@ export class AppComponent implements OnInit {
       }
     });
     // TODO: Figure out why the color flickers when you hover.
+    // TODO: add component where it displays the name of the theater currently being hovered.
     this.map.addInteraction(hoverSelect)    
     this.mapView.on("change:resolution", (event) => this.resolutionChanged(event));
     this.map.on(["click"], (event) => this.mapClicked(event));
