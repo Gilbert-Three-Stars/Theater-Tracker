@@ -3,6 +3,7 @@ import { RouterOutlet } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { MapComponent } from './components/map/map.component';
 import { MarkersliderComponent } from './components/markerslider/markerslider.component';
+import { HoveredtheaterlabelComponent } from './components/hoveredtheaterlabel/hoveredtheaterlabel.component';
 import { LocationService } from './services/location.service';
 import { TheaterService } from './services/theater.service';
 import { Theater } from './models/theater.model';
@@ -24,7 +25,7 @@ import { fromLonLat } from 'ol/proj';
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, MapComponent, MarkersliderComponent, CommonModule],
+  imports: [RouterOutlet, MapComponent, MarkersliderComponent, HoveredtheaterlabelComponent, CommonModule],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',
 })
@@ -33,6 +34,7 @@ export class AppComponent implements OnInit {
   map!: Map;
   mapView = new View();
   radiusScaler: number = 0.077090340142445;
+  curHoveredTheaterName: string = "";
   private static defaultResolution = 108.09828206839214;
   private theaterVectorSource = new VectorSource(); 
   private markerRadiusVectorSource = new VectorSource();
@@ -95,6 +97,8 @@ export class AppComponent implements OnInit {
         condition: pointerMove,
         layers: [theaterLayer],
         style: (feature) => {
+          this.curHoveredTheaterName = feature.get('name');
+          console.log(this.curHoveredTheaterName)
           return new Style({
             fill: new Fill({
               color: [255, 50, 50, 0.6]
@@ -102,32 +106,12 @@ export class AppComponent implements OnInit {
             stroke: new Stroke({
               color: [220, 220, 220, 0.9]
             })
-          })          
-          /*
-          if(feature instanceof Feature) {
-            let curStyle = feature.getStyle();
-            if(curStyle instanceof Style) {
-              return new Style({
-                image: new Icon({
-                  anchor: [0.5, 0.5],
-                  anchorXUnits: 'fraction',
-                  anchorYUnits: 'fraction',
-                  crossOrigin: 'anonymous',
-                  src: 'theatericonhover.png',
-                  scale: curStyle.getImage()?.getScale()
-                })
-              })
-            }
-          }
-          console.log('here past where I should be')
-          return undefined;
-          */
+          }) 
         }
       });
       this.map.addInteraction(hoverSelect)    
     });
     
-    // TODO: Figure out why the color flickers when you hover.
     // TODO: add component where it displays the name of the theater currently being hovered.
     this.mapView.on("change:resolution", (event) => this.resolutionChanged(event));
     this.map.on(["click"], (event) => this.mapClicked(event));
@@ -175,8 +159,4 @@ export class AppComponent implements OnInit {
     this.theaterVectorSource.clear(false)
     this.theaterVectorSource.addFeatures(theaterFeatureArr);
   }
-
-  
-
-
 }

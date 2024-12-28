@@ -25,4 +25,7 @@ main {
 footer {
     background-color: var(--header-color);
     padding: 1em;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
