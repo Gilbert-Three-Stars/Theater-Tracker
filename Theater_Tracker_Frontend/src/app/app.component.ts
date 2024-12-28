@@ -12,11 +12,10 @@ import OSM from 'ol/source/OSM';
 import VectorLayer from 'ol/layer/Vector';
 import VectorSource from 'ol/source/Vector';
 import Feature from 'ol/Feature';
-import Style from 'ol/style/Style';
-import Icon from 'ol/style/Icon';
-import Point from 'ol/geom/Point';
+import { Point, Circle } from 'ol/geom';
 import View from 'ol/View';
 import Select from 'ol/interaction/Select.js';
+import { Fill, Stroke, Style, Icon } from 'ol/style';
 import { pointerMove } from 'ol/events/condition';
 import { fromLonLat } from 'ol/proj';
 
@@ -92,39 +91,40 @@ export class AppComponent implements OnInit {
           radiusLayer
         ]
       })
-      
-    });
-    let hoverSelect = new Select({
-      condition: pointerMove,
-      style: (feature) => {
-        if(feature instanceof Feature) {
-          let curStyle = feature.getStyle();
-          if(curStyle instanceof Style) {
-            return new Style({
-              image: new Icon({
-                anchor: [0.5, 0.5],
-                anchorXUnits: 'fraction',
-                anchorYUnits: 'fraction',
-                crossOrigin: 'anonymous',
-                src: 'theatericonhover.png',
-                scale: curStyle.getImage()?.getScale()
+      let hoverSelect = new Select({
+        condition: pointerMove,
+        layers: [theaterLayer],
+        style: (feature) => {
+          if(feature instanceof Feature) {
+            let curStyle = feature.getStyle();
+            if(curStyle instanceof Style) {
+              return new Style({
+                image: new Icon({
+                  anchor: [0.5, 0.5],
+                  anchorXUnits: 'fraction',
+                  anchorYUnits: 'fraction',
+                  crossOrigin: 'anonymous',
+                  src: 'theatericonhover.png',
+                  scale: curStyle.getImage()?.getScale()
+                })
               })
-            })
+            }
           }
+          console.log('here past where I should be')
+          return undefined;
         }
-        return undefined;
-      }
+      });
+      this.map.addInteraction(hoverSelect)    
     });
+    
     // TODO: Figure out why the color flickers when you hover.
     // TODO: add component where it displays the name of the theater currently being hovered.
-    this.map.addInteraction(hoverSelect)    
     this.mapView.on("change:resolution", (event) => this.resolutionChanged(event));
     this.map.on(["click"], (event) => this.mapClicked(event));
   }
 
   resolutionChanged(event: any) {
     this.markerRadiusIcon.setScale((this.radiusScaler * AppComponent.defaultResolution)/this.mapView.getResolution()!);
-    console.log(this.mapView.getResolution()) // 2800
   }
   // convert radius to scale
   // update marker scale accordingly
@@ -147,21 +147,18 @@ export class AppComponent implements OnInit {
   populateTheaters(theaters: Theater[]) {
     let theaterFeatureArr: Array<Feature> = new Array();
     for(let theater of theaters) {
-      let curGeom = new Point(fromLonLat([theater['latitude'], theater['longitude']]))
-      curGeom.scale(10/theater['numScreens'])
+      let curGeom = new Circle(
+        fromLonLat([theater['latitude'], theater['longitude']]), 
+        100 + 75*theater['numScreens'])
       let curTheaterFeature = new Feature({
         geometry: curGeom,
         name: theater['name']
       })
       curTheaterFeature.setStyle(new Style({
-        image: new Icon({
-          anchor: [0.5, 0.5],
-          anchorXUnits: 'fraction',
-          anchorYUnits: 'fraction',
-          crossOrigin: 'anonymous',
-          src: 'redcircleblackborder.png',
-          scale: (.0125 + .0125 * (theater['numScreens']/10))/2
-        })
+        fill: new Fill({
+          color: [255, 88, 88, 0.4],
+        }),
+        stroke: new Stroke({})
       }))
       theaterFeatureArr.push(curTheaterFeature)
     }
