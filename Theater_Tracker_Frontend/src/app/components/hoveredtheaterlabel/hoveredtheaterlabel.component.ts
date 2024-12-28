@@ -8,6 +8,6 @@ import { Component, Input } from '@angular/core';
   styleUrl: './hoveredtheaterlabel.component.css'
 })
 export class HoveredtheaterlabelComponent {
-  @Input() theaterName: string = "";
+  @Input() theaterName: string = "<-Hover on theater to view name->";
 
 }

@@ -34,7 +34,7 @@ export class AppComponent implements OnInit {
   map!: Map;
   mapView = new View();
   radiusScaler: number = 0.077090340142445;
-  curHoveredTheaterName: string = "";
+  curHoveredTheaterName: string = "<-Hover on theater to view name->";
   private static defaultResolution = 108.09828206839214;
   private theaterVectorSource = new VectorSource(); 
   private markerRadiusVectorSource = new VectorSource();
@@ -98,7 +98,6 @@ export class AppComponent implements OnInit {
         layers: [theaterLayer],
         style: (feature) => {
           this.curHoveredTheaterName = feature.get('name');
-          console.log(this.curHoveredTheaterName)
           return new Style({
             fill: new Fill({
               color: [255, 50, 50, 0.6]
@@ -109,7 +108,23 @@ export class AppComponent implements OnInit {
           }) 
         }
       });
-      this.map.addInteraction(hoverSelect)    
+      this.map.addInteraction(hoverSelect)  
+      let theaterSelected: boolean = false;
+      this.map.on('pointermove', (event) => {
+        if(theaterSelected) {
+          theaterSelected = false;
+          this.curHoveredTheaterName = "<-Hover on theater to view name->"
+        }
+        this.map.forEachFeatureAtPixel(event.pixel, (feature) => {
+          theaterSelected = true;
+          this.curHoveredTheaterName = feature.get('name');
+          return true;
+        }, {
+          layerFilter: (layerCandidate) => {
+            return layerCandidate.getZIndex() === 1 // only apply hover for theater layer
+          }
+        })
+     })  
     });
     
     // TODO: add component where it displays the name of the theater currently being hovered.
