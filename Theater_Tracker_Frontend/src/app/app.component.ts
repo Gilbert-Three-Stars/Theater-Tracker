@@ -95,6 +95,15 @@ export class AppComponent implements OnInit {
         condition: pointerMove,
         layers: [theaterLayer],
         style: (feature) => {
+          return new Style({
+            fill: new Fill({
+              color: [255, 50, 50, 0.6]
+            }),
+            stroke: new Stroke({
+              color: [220, 220, 220, 0.9]
+            })
+          })          
+          /*
           if(feature instanceof Feature) {
             let curStyle = feature.getStyle();
             if(curStyle instanceof Style) {
@@ -112,6 +121,7 @@ export class AppComponent implements OnInit {
           }
           console.log('here past where I should be')
           return undefined;
+          */
         }
       });
       this.map.addInteraction(hoverSelect)    
