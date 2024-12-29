@@ -35,6 +35,8 @@ export class AppComponent implements OnInit {
   mapView = new View();
   radiusScaler: number = 0.077090340142445;
   curHoveredTheaterName: string = "<-Hover on theater to view name->";
+  zIndexTheaterLayer = 1;
+  private locationCircle: Circle = new Circle([0,0], 0);
   private static defaultResolution = 108.09828206839214;
   private theaterVectorSource = new VectorSource(); 
   private markerRadiusVectorSource = new VectorSource();
@@ -49,7 +51,6 @@ export class AppComponent implements OnInit {
   
   constructor(private locService: LocationService, private theaterService: TheaterService) {
     let ssrView = this.locService.getCoordsAndZoom();
-
     afterNextRender(() => {
       let afterRenderView = this.locService.getCoordsAndZoom();
       this.mapView.adjustZoom(afterRenderView.getZoom() - ssrView.getZoom());
@@ -60,28 +61,45 @@ export class AppComponent implements OnInit {
     })
   }
   
-  
+  // TODO: Change radius layer
+  // - add 'anti-radius' layer that is a semi-opaque layer that covers everything not within the radius
+  // - make the actual radius layer very nearly transparent
+  // - radius layer should also be centered and change with the change of the viewCenter
+  //   -> this is found initially with the ssrView and afterRenderView  
+  //      and should be changed with the dragging of the map
   ngOnInit(): void {
     this.theaterService.getTheaters().subscribe(theaters => {
-      let coordsZoom = this.locService.getCoordsAndZoom()
+      let coordsZoom = this.locService.getCoordsAndZoom();
       this.mapView.setZoom(coordsZoom.getZoom());
       this.mapView.setCenter(coordsZoom.getCoords());
-      this.populateTheaters(theaters)
+      this.locationCircle.setCenterAndRadius(coordsZoom.getCoords(), 300*coordsZoom.getResolution());
+      this.populateTheaters(theaters);
       let theaterLayer = new VectorLayer({
         source: this.theaterVectorSource,
-        zIndex: 1,
+        zIndex: this.zIndexTheaterLayer,
         opacity: 0.6,
         maxResolution: 2800
       })
-      
+      // give radius layer a default feature      
       let radiusLayer = new VectorLayer({
         source: this.markerRadiusVectorSource,
         style: new Style({
           image: this.markerRadiusIcon
         }),
         zIndex: 2,
-        opacity: 0.3
+        opacity: 0.3,
+        updateWhileInteracting: true
       })
+      let radiusFeature = new Feature({
+        geometry: this.locationCircle,
+      })
+      radiusFeature.setStyle(new Style({
+        fill: new Fill({
+          color: [240, 88, 240, 0.4],
+        }),
+        stroke: new Stroke({})
+      }))
+      this.markerRadiusVectorSource.addFeature(radiusFeature)
       this.map = new Map({
         view: this.mapView,
         layers: [
@@ -121,15 +139,23 @@ export class AppComponent implements OnInit {
           return true;
         }, {
           layerFilter: (layerCandidate) => {
-            return layerCandidate.getZIndex() === 1 // only apply hover for theater layer
+            return layerCandidate.getZIndex() === this.zIndexTheaterLayer
           }
         })
      })  
     });
-    
-    // TODO: add component where it displays the name of the theater currently being hovered.
+    this.mapView.on("change:center", (event) => this.centerChanged(event))
     this.mapView.on("change:resolution", (event) => this.resolutionChanged(event));
     this.map.on(["click"], (event) => this.mapClicked(event));
+  }
+
+  centerChanged(event: any) {
+    // recenter the radius layer feature.
+    console.log(this.mapView.getCenter())
+    let curCenter = this.mapView.getCenter();
+    if(curCenter) {
+      this.locationCircle.setCenter(curCenter)
+    }
   }
 
   resolutionChanged(event: any) {
@@ -149,8 +175,10 @@ export class AppComponent implements OnInit {
     let curClickFeature = new Feature({
       geometry: new Point(this.map.getCoordinateFromPixel(event.pixel))
     })
+    /*
     this.markerRadiusVectorSource.clear(false)
     this.markerRadiusVectorSource.addFeature(curClickFeature)
+    */
   }
 
   populateTheaters(theaters: Theater[]) {
