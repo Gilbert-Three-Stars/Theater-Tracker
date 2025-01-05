@@ -11,7 +11,6 @@ import Map from 'ol/Map';
 import TileLayer from 'ol/layer/Tile';
 import OSM from 'ol/source/OSM';
 import VectorLayer from 'ol/layer/Vector';
-import BaseLayer from 'ol/layer/Base';
 import VectorSource from 'ol/source/Vector';
 import Feature from 'ol/Feature';
 import { Point, Circle } from 'ol/geom';
@@ -54,12 +53,6 @@ export class AppComponent implements OnInit {
     })
   }
   
-  // TODO: Change radius layer
-  // - add 'anti-radius' layer that is a semi-opaque layer that covers everything not within the radius
-  // - make the actual radius layer very nearly transparent
-  // - radius layer should also be centered and change with the change of the viewCenter
-  //   -> this is found initially with the ssrView and afterRenderView  
-  //      and should be changed with the dragging of the map
   ngOnInit(): void {
     this.theaterService.getTheaters().subscribe(theaters => {
       let coordsZoom = this.locService.getCoordsAndZoom();
