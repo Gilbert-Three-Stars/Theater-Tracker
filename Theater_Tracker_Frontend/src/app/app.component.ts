@@ -11,6 +11,7 @@ import Map from 'ol/Map';
 import TileLayer from 'ol/layer/Tile';
 import OSM from 'ol/source/OSM';
 import VectorLayer from 'ol/layer/Vector';
+import BaseLayer from 'ol/layer/Base';
 import VectorSource from 'ol/source/Vector';
 import Feature from 'ol/Feature';
 import { Point, Circle } from 'ol/geom';
@@ -38,16 +39,8 @@ export class AppComponent implements OnInit {
   zIndexTheaterLayer = 1;
   private locationCircle: Circle = new Circle([0,0], 0);
   private static defaultResolution = 108.09828206839214;
-  private theaterVectorSource = new VectorSource(); 
+  private theaterVectorSource = new VectorSource();
   private markerRadiusVectorSource = new VectorSource();
-  private markerRadiusIcon = new Icon({
-    anchor: [0.5, 0.5],
-    anchorXUnits: 'fraction', 
-    anchorYUnits: 'fraction',
-    crossOrigin: 'anonymous',
-    src: 'greencircleblackborder.png',
-    scale: this.radiusScaler
-  })
   
   constructor(private locService: LocationService, private theaterService: TheaterService) {
     let ssrView = this.locService.getCoordsAndZoom();
@@ -72,7 +65,7 @@ export class AppComponent implements OnInit {
       let coordsZoom = this.locService.getCoordsAndZoom();
       this.mapView.setZoom(coordsZoom.getZoom());
       this.mapView.setCenter(coordsZoom.getCoords());
-      this.locationCircle.setCenterAndRadius(coordsZoom.getCoords(), 300*coordsZoom.getResolution());
+      this.locationCircle.setCenterAndRadius(coordsZoom.getCoords(), 500*coordsZoom.getResolution());
       this.populateTheaters(theaters);
       let theaterLayer = new VectorLayer({
         source: this.theaterVectorSource,
@@ -83,21 +76,23 @@ export class AppComponent implements OnInit {
       // give radius layer a default feature      
       let radiusLayer = new VectorLayer({
         source: this.markerRadiusVectorSource,
-        style: new Style({
-          image: this.markerRadiusIcon
-        }),
         zIndex: 2,
         opacity: 0.3,
-        updateWhileInteracting: true
+        updateWhileInteracting: true,
+        
       })
       let radiusFeature = new Feature({
         geometry: this.locationCircle,
       })
+
       radiusFeature.setStyle(new Style({
         fill: new Fill({
-          color: [240, 88, 240, 0.4],
+          color: [240, 88, 240, 0.1],
         }),
-        stroke: new Stroke({})
+        stroke: new Stroke({
+          color: [240, 88, 240, 0.5],
+          width: 400
+        })
       }))
       this.markerRadiusVectorSource.addFeature(radiusFeature)
       this.map = new Map({
@@ -146,7 +141,6 @@ export class AppComponent implements OnInit {
     });
     this.mapView.on("change:center", (event) => this.centerChanged(event))
     this.mapView.on("change:resolution", (event) => this.resolutionChanged(event));
-    this.map.on(["click"], (event) => this.mapClicked(event));
   }
 
   centerChanged(event: any) {
@@ -154,31 +148,21 @@ export class AppComponent implements OnInit {
     console.log(this.mapView.getCenter())
     let curCenter = this.mapView.getCenter();
     if(curCenter) {
-      this.locationCircle.setCenter(curCenter)
+      this.locationCircle.setCenter(curCenter);
     }
   }
 
   resolutionChanged(event: any) {
-    this.markerRadiusIcon.setScale((this.radiusScaler * AppComponent.defaultResolution)/this.mapView.getResolution()!);
+    let curRes = this.mapView.getResolution();
+    if(curRes) {
+      this.locationCircle.setRadius(500*curRes);
+    }
   }
   // convert radius to scale
   // update marker scale accordingly
   changeMarkerScale(newRadius: number) {
     let newScale = newRadius/(0.3*this.mapView.getResolution()!);
-    this.markerRadiusIcon.setScale(newScale)
     this.markerRadiusVectorSource.changed();
-  }
-
-  // when the map is clicked, the current location marker is removed (if there is one)
-  // and the new location marker is added
-  mapClicked(event: any) {
-    let curClickFeature = new Feature({
-      geometry: new Point(this.map.getCoordinateFromPixel(event.pixel))
-    })
-    /*
-    this.markerRadiusVectorSource.clear(false)
-    this.markerRadiusVectorSource.addFeature(curClickFeature)
-    */
   }
 
   populateTheaters(theaters: Theater[]) {
