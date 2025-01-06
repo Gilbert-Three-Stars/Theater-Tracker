@@ -36,6 +36,7 @@ export class AppComponent implements OnInit {
   radiusScaler: number = 0.077090340142445;
   curHoveredTheaterName: string = "<-Hover on theater to view name->";
   curResolution: number = 108.09828206839214;
+  radiusPixels: number = 700;
   private zIndexTheaterLayer = 1;
   private locationCircle: Circle = new Circle([0,0], 0);
   private theaterVectorSource = new VectorSource();
@@ -58,7 +59,7 @@ export class AppComponent implements OnInit {
       let coordsZoom = this.locService.getCoordsAndZoom();
       this.mapView.setZoom(coordsZoom.getZoom());
       this.mapView.setCenter(coordsZoom.getCoords());
-      this.locationCircle.setCenterAndRadius(coordsZoom.getCoords(), 500*coordsZoom.getResolution());
+      this.locationCircle.setCenterAndRadius(coordsZoom.getCoords(), this.radiusPixels*coordsZoom.getResolution());
       this.populateTheaters(theaters);
       let theaterLayer = new VectorLayer({
         source: this.theaterVectorSource,
@@ -84,7 +85,7 @@ export class AppComponent implements OnInit {
         }),
         stroke: new Stroke({
           color: [240, 88, 240, 0.5],
-          width: 400
+          width: 800
         })
       }))
       this.markerRadiusVectorSource.addFeature(radiusFeature)
@@ -147,14 +148,16 @@ export class AppComponent implements OnInit {
   resolutionChanged(event: any) {
     let curRes = this.mapView.getResolution();
     if(curRes) {
-      this.locationCircle.setRadius(500*curRes);
+      this.locationCircle.setRadius(this.radiusPixels*curRes);
       this.curResolution = curRes;
     }
   }
   // convert radius to scale
   // update marker scale accordingly
-  changeMarkerScale(newRadius: number) {
-    let newScale = newRadius/(0.3*this.mapView.getResolution()!);
+  changeMarkerScale(curPixels: number) {
+    // let newScale = newRadius/(0.3*this.mapView.getResolution()!);
+    this.radiusPixels = curPixels;
+    this.locationCircle.setRadius(this.radiusPixels*this.curResolution);
     this.markerRadiusVectorSource.changed();
   }
 
