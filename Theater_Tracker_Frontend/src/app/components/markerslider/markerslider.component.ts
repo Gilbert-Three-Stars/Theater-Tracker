@@ -12,13 +12,15 @@ import { FormsModule } from '@angular/forms';
 // TODO: Make the marker change the scale instead of the radius and calculate the radius
 // based on the current scale + resolution
 export class MarkersliderComponent {
-  private static defaultResolution: number = 108.09828206839214;
-  private static defaultScale: number = 0.077090340142445;
   @Output() radiusChanged = new EventEmitter<number>();
+  @Input() curResolution: number = 108.09828206839214;
   // curRadius is in kilometers
-  public curRadius: number = (300 * MarkersliderComponent.defaultResolution * MarkersliderComponent.defaultScale)/1000;
-  public displayRadius: string = this.curRadius.toFixed(1).toString(); 
+  public displayRadius: string = ((300 * this.curResolution)/1000).toFixed(1).toString(); 
 
+  ngOnChanges(): void {
+    this.displayRadius = ((300 * this.curResolution)/1000).toFixed(1).toString();
+  }
+  
   onRadiusChange(radius: number): void {
     this.displayRadius = radius.toFixed(1);
     this.radiusChanged.emit(radius);

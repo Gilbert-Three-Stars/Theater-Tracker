@@ -35,9 +35,9 @@ export class AppComponent implements OnInit {
   mapView = new View();
   radiusScaler: number = 0.077090340142445;
   curHoveredTheaterName: string = "<-Hover on theater to view name->";
-  zIndexTheaterLayer = 1;
+  curResolution: number = 108.09828206839214;
+  private zIndexTheaterLayer = 1;
   private locationCircle: Circle = new Circle([0,0], 0);
-  private static defaultResolution = 108.09828206839214;
   private theaterVectorSource = new VectorSource();
   private markerRadiusVectorSource = new VectorSource();
   
@@ -80,7 +80,7 @@ export class AppComponent implements OnInit {
 
       radiusFeature.setStyle(new Style({
         fill: new Fill({
-          color: [240, 88, 240, 0.1],
+          color: [240, 88, 240, 0],
         }),
         stroke: new Stroke({
           color: [240, 88, 240, 0.5],
@@ -138,7 +138,6 @@ export class AppComponent implements OnInit {
 
   centerChanged(event: any) {
     // recenter the radius layer feature.
-    console.log(this.mapView.getCenter())
     let curCenter = this.mapView.getCenter();
     if(curCenter) {
       this.locationCircle.setCenter(curCenter);
@@ -149,6 +148,7 @@ export class AppComponent implements OnInit {
     let curRes = this.mapView.getResolution();
     if(curRes) {
       this.locationCircle.setRadius(500*curRes);
+      this.curResolution = curRes;
     }
   }
   // convert radius to scale
