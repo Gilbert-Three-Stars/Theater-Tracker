@@ -14,13 +14,6 @@ export class MarkersliderComponent {
   @Output() radiusChanged = new EventEmitter<number>();
   @Input() curResolution: number = 108.09828206839214;
   radiusPixels: number = 700
-  // curRadius is in kilometers
-  // default pixels is 500 for the radius 
-  // in app.component.ts
-  // there is 500 * curRes for the radius of the location circle (which is set in meters)
-  // the actual radius => (radiusPixels - 200) * curRes
-  // onRadiusChange will change the radiusPixels and update the display radius which is given by:
-  // (((radiusPixels - 200) * this.curResolution)/1000).toFixed(1)
   public displayRadius: string = (((this.radiusPixels - 400) * this.curResolution)/1000).toFixed(1); 
 
   ngOnChanges(): void {
