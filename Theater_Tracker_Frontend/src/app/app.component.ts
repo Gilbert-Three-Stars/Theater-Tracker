@@ -165,7 +165,7 @@ export class AppComponent implements OnInit {
     let theaterFeatureArr: Array<Feature> = new Array();
     for(let theater of theaters) {
       let curGeom = new Circle(
-        fromLonLat([theater['latitude'], theater['longitude']]), 
+        fromLonLat([theater['longitude'], theater['latitude']]), 
         100 + 75*theater['numScreens'])
       let curTheaterFeature = new Feature({
         geometry: curGeom,

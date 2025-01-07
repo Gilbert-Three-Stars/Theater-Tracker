@@ -30,25 +30,20 @@ export class TheaterService {
       }
       return theaters
     }))
-    /*
-    this.httpClient.get(`${environment.API_URL}/theaters`).subscribe(json => {      
-      for (let theaterStr in Object.values(json)) {
-        let jsonObj = JSON.parse(theaterStr)
-        let theaterObj = new Theater(
-          jsonObj['address'], 
-          jsonObj['id'], 
-          jsonObj['latitude'], 
-          jsonObj['longitude'],
-          jsonObj['name'],
-          jsonObj['numScreens']
-        )
-        this.theaters.push(theaterObj)
-      }
-    })
-    if(this.theaters.length === 0) {
-      console.log("Wasn't able to get theaters")
-    }
-    return this.theaters
-    */
   }
+  /*
+  findNearbyTheaters(viewCenter: number[], radius: number): Observable<Theater[]> {
+    return this.httpClient.get(`${environment.API_URL}/theaters`).pipe(map(json => {
+      let nearbyTheaters: Theater[] = new Array<Theater>;
+      for (let theaterObj of Object.values(json)) {
+        // get current coords of theater obj
+        // compare to viewCenter
+        // see if the distance between the points is smaller than the radius 
+        // if it is, push to nearbyTheaters
+        let curCoords = [theaterObj['latitude'], theaterObj['longitude']]
+
+      }
+    }))
+  }
+  */
 }

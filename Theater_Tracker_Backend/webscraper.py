@@ -22,7 +22,7 @@ def scraper():
             curName = theater.get('data-name')
             curAddress = re.sub('<br>', ' ', theater.get('data-address'))
             curNumScreens = int(theater.contents[7].text)
-            curTheater = Theater(longitude=curLat, latitude=curLon, name=curName, address=curAddress, numScreens=curNumScreens)
+            curTheater = Theater(longitude=curLon, latitude=curLat, name=curName, address=curAddress, numScreens=curNumScreens)
             db.session.add(curTheater)
         time.sleep(1 + random.random())    
         pageNum += 1
