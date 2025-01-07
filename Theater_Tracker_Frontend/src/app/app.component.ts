@@ -84,7 +84,7 @@ export class AppComponent implements OnInit {
           color: [240, 88, 240, 0],
         }),
         stroke: new Stroke({
-          color: [240, 88, 240, 0.5],
+          color: [240, 88, 240, 0.75],
           width: 800
         })
       }))
@@ -107,10 +107,10 @@ export class AppComponent implements OnInit {
           this.curHoveredTheaterName = feature.get('name');
           return new Style({
             fill: new Fill({
-              color: [255, 50, 50, 0.6]
+              color: [20, 220, 20, 0.8]
             }),
             stroke: new Stroke({
-              color: [220, 220, 220, 0.9]
+              color: [0, 0, 0, 0.9]
             })
           }) 
         }

@@ -6,7 +6,7 @@
 <div style="height: 20px;">
     <label for="radius">Radius (km): {{displayRadius}}</label>
 </div>
-<input type="range" #slider min="400" max="700" value="radiusPixels" step="any" id="radius" name="radius" [(ngModel)]="radiusPixels" class="slider" (change)="onRadiusChange(radiusPixels)"/>
+<input type="range" #slider min="400" max="700" value="700" step="any" id="radius" name="radius"  class="slider" (input)="onRadiusChange($event)"/>
 
 
 

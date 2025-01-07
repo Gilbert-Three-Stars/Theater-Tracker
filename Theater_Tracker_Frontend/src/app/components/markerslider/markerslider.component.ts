@@ -9,7 +9,7 @@ import { FormsModule } from '@angular/forms';
   templateUrl: './markerslider.component.html',
   styleUrl: './markerslider.component.css'
 })
-// TODO: Make the marker change the pixels instead of the radius 
+
 export class MarkersliderComponent {
   @Output() radiusChanged = new EventEmitter<number>();
   @Input() curResolution: number = 108.09828206839214;
@@ -20,12 +20,13 @@ export class MarkersliderComponent {
     this.displayRadius = (((this.radiusPixels - 400) * this.curResolution)/1000).toFixed(1);
   }
   
-  // the slider should change the radius pixels
-  onRadiusChange(curPixels: number): void {
-    this.radiusPixels = curPixels;
-    // might not need the following line of code because we already have ngOnChanges
+  onRadiusChange(event: Event): void {
+    this.radiusPixels = (event.target as HTMLInputElement).valueAsNumber;
+    
     this.displayRadius = (((this.radiusPixels - 400) * this.curResolution)/1000).toFixed(1);
-    this.radiusChanged.emit(curPixels);
+    this.radiusChanged.emit(this.radiusPixels);
+    
+    console.log(this.radiusPixels)
   }
 
 }
