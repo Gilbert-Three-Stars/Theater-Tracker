@@ -6,6 +6,9 @@
     <app-markerslider [curResolution]="curResolution" (radiusChanged)="changeMarkerScale($event)"></app-markerslider>
   </div>
   <app-map [map]="map"></app-map>
+  <div class="right-bar">
+    <app-theaterbutton [viewCenter]="locationCircle.getCenter()" [radiusPixels]="radiusPixels" [resolution]="curResolution"></app-theaterbutton>
+  </div>
 </main>
 <footer>
   <app-hoveredtheaterlabel [theaterName]="curHoveredTheaterName"></app-hoveredtheaterlabel>

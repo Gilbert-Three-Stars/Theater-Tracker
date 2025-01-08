@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { MapComponent } from './components/map/map.component';
 import { MarkersliderComponent } from './components/markerslider/markerslider.component';
 import { HoveredtheaterlabelComponent } from './components/hoveredtheaterlabel/hoveredtheaterlabel.component';
+import { TheaterbuttonComponent } from './components/theaterbutton/theaterbutton.component';
 import { LocationService } from './services/location.service';
 import { TheaterService } from './services/theater.service';
 import { Theater } from './models/theater.model';
@@ -25,7 +26,7 @@ import { fromLonLat } from 'ol/proj';
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, MapComponent, MarkersliderComponent, HoveredtheaterlabelComponent, CommonModule],
+  imports: [RouterOutlet, MapComponent, MarkersliderComponent, HoveredtheaterlabelComponent, TheaterbuttonComponent, CommonModule],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',
 })
@@ -38,7 +39,7 @@ export class AppComponent implements OnInit {
   curResolution: number = 108.09828206839214;
   radiusPixels: number = 700;
   private zIndexTheaterLayer = 1;
-  private locationCircle: Circle = new Circle([0,0], 0);
+  locationCircle: Circle = new Circle([0,0], 0);
   private theaterVectorSource = new VectorSource();
   private markerRadiusVectorSource = new VectorSource();
   

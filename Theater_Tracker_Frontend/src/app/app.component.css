@@ -22,6 +22,14 @@ main {
     align-items: center;
 }
 
+.right-bar {
+    width: 20em;
+    background-color: var(--sidebar-color);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
 footer {
     background-color: var(--header-color);
     padding: 1em;
