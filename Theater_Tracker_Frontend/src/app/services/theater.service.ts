@@ -2,7 +2,9 @@ import { Injectable } from '@angular/core';
 import { environment } from '../../environments/env';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, map } from 'rxjs';
-import { Theater } from '../models/theater.model'
+import { Theater } from '../models/theater.model';
+import { LineString } from 'ol/geom';
+import { fromLonLat } from 'ol/proj';
 
 
 
@@ -31,19 +33,20 @@ export class TheaterService {
       return theaters
     }))
   }
-  /*
-  findNearbyTheaters(viewCenter: number[], radius: number): Observable<Theater[]> {
+
+  getNearbyTheaters(viewCenter: number[], radius: number): Observable<Theater[]> {
     return this.httpClient.get(`${environment.API_URL}/theaters`).pipe(map(json => {
       let nearbyTheaters: Theater[] = new Array<Theater>;
       for (let theaterObj of Object.values(json)) {
-        // get current coords of theater obj
-        // compare to viewCenter
-        // see if the distance between the points is smaller than the radius 
-        // if it is, push to nearbyTheaters
-        let curCoords = [theaterObj['latitude'], theaterObj['longitude']]
-
+        let lineCoords = new Array<number[]>;
+        lineCoords.push(fromLonLat([theaterObj['longitude'], theaterObj['latitude']]))
+        lineCoords.push(viewCenter);
+        let curLine = new LineString(lineCoords)
+        if(curLine.getLength() <= radius) {
+          nearbyTheaters.push(theaterObj)
+        }
       }
+      return nearbyTheaters
     }))
   }
-  */
 }
