@@ -17,16 +17,18 @@ export class TheaterbuttonComponent {
   @Input() radiusPixels: number = 0;
   @Input() resolution: number = 0;
   nearbyTheaters: [Theater, number][] = [];
-  @Output() buttonClicked = new EventEmitter<[Theater, number][]>()
   
   
   constructor(private theaterService: TheaterService) {}
 
   onPress(): void {
     // curRadius in meters
+    console.log('button pressing working?')
     this.theaterService.getNearbyTheaters(this.viewCenter, this.radiusPixels * this.resolution)
     .subscribe(theaters => {
       this.nearbyTheaters = theaters;
+      console.log("in theater button")
+      console.log(this.nearbyTheaters)
     })
   }
 

@@ -1,3 +1,7 @@
 <p></p>
-<input type="button" value="show theaters"/>
-<app-theaterlist></app-theaterlist>
+<section class="mat-typography">
+    <button (click)="onPress()">
+        Show Theaters
+    </button>
+</section>
+<app-theaterlist [nearbyTheaters]="nearbyTheaters"></app-theaterlist>

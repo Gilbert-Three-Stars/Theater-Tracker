@@ -26,7 +26,6 @@ export class MarkersliderComponent {
     this.displayRadius = (((this.radiusPixels - 400) * this.curResolution)/1000).toFixed(1);
     this.radiusChanged.emit(this.radiusPixels);
     
-    console.log(this.radiusPixels)
   }
 
 }
