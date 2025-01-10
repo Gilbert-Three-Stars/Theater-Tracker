@@ -11,11 +11,6 @@ import { CommonModule, NgFor } from '@angular/common';
 })
 export class TheaterlistComponent {
   @Input() nearbyTheaters: [Theater, number][] = [];
-  // we want to sort the nearbyTheaters by distance from the view center
-  ngOnInit() {
-    this.nearbyTheaters.sort((theaterA, theaterB) => { return theaterA[1] - theaterB[1] });
-    console.log('in theater list')
-    console.log(this.nearbyTheaters)
-  }
+
 
 }

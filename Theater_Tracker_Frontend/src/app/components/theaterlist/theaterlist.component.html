@@ -1,7 +1,7 @@
 <p></p>
 <ng-container *ngIf="nearbyTheaters.length > 0; else noTheatersTemplate">
     <div *ngFor="let theater of nearbyTheaters">
-        {{theater}}
+        {{theater[0].name}}
     </div>
 </ng-container>
 

@@ -23,12 +23,9 @@ export class TheaterbuttonComponent {
 
   onPress(): void {
     // curRadius in meters
-    console.log('button pressing working?')
     this.theaterService.getNearbyTheaters(this.viewCenter, this.radiusPixels * this.resolution)
     .subscribe(theaters => {
-      this.nearbyTheaters = theaters;
-      console.log("in theater button")
-      console.log(this.nearbyTheaters)
+      this.nearbyTheaters = theaters.sort((theaterA, theaterB) => { return theaterA[1] - theaterB[1] });
     })
   }
 
