@@ -1,7 +1,19 @@
+<!-- 
+TODO: make it so that the theater list doesn't expand the page, rather you can scroll through it. 
+-->
 <p></p>
 <ng-container *ngIf="nearbyTheaters.length > 0; else noTheatersTemplate">
+    <!--
     <div *ngFor="let theater of nearbyTheaters">
         {{theater[0].name}}
+    </div>
+    -->
+    <div class="theater-list">
+        <mat-list>
+            <mat-list-item *ngFor="let theater of nearbyTheaters">
+                <div matListItemTitle>{{theater[0].name}}</div>
+            </mat-list-item>
+        </mat-list>
     </div>
 </ng-container>
 

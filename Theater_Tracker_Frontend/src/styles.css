@@ -1,7 +1,9 @@
 /* You can add global styles to this file, and also import other style files */
+@import "../node_modules/@angular/material/prebuilt-themes/purple-green.css";
 @import url("https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap");
-body {
+body { 
     font-family: "Noto Sans", sans-serif;
+    margin: 0;
     font-optical-sizing: auto;
     font-weight: 400;
     font-style: normal;
@@ -9,7 +11,8 @@ body {
         "wdth" 100;
     color: var(--text-color);
     margin: 0;
-    --header-color: #4c553b;
-    --sidebar-color: #897a5d;
+    --header-color: #303030;
+    --sidebar-color: #464646;
     --text-color: #d3e0dc;
-}
+  }
+

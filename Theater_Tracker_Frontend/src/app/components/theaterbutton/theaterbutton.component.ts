@@ -1,13 +1,14 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { TheaterService } from '../../services/theater.service';
 import { Theater } from '../../models/theater.model';
 import { TheaterlistComponent } from '../theaterlist/theaterlist.component';
+import { MatButtonModule } from '@angular/material/button'; 
 
 
 @Component({
   selector: 'app-theaterbutton',
   standalone: true,
-  imports: [TheaterlistComponent],
+  imports: [TheaterlistComponent, MatButtonModule],
   templateUrl: './theaterbutton.component.html',
   styleUrl: './theaterbutton.component.css'
 })

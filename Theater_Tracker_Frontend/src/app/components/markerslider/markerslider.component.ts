@@ -1,11 +1,12 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { MatSliderModule } from '@angular/material/slider';
 
 @Component({
   selector: 'app-markerslider',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, MatSliderModule],
   templateUrl: './markerslider.component.html',
   styleUrl: './markerslider.component.css'
 })

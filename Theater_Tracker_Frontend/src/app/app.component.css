@@ -9,6 +9,8 @@ header {
 }
 header .title {
     font-size: 28px;
+    justify-content: center;
+    align-items: center;
 }
 main {
     display: flex;
@@ -23,7 +25,7 @@ main {
 }
 
 .right-bar {
-    width: 20em;
+    width: 40em;
     background-color: var(--sidebar-color);
     display: flex;
     justify-content: center;
