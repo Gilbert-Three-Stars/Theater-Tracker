@@ -23,7 +23,6 @@ export class MarkersliderComponent {
   
   onRadiusChange(event: Event): void {
     this.radiusPixels = (event.target as HTMLInputElement).valueAsNumber;
-    
     this.displayRadius = (((this.radiusPixels - 400) * this.curResolution)/1000).toFixed(1);
     this.radiusChanged.emit(this.radiusPixels);
     
