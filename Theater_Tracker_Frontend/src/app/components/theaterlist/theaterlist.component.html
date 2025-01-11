@@ -2,24 +2,22 @@
 TODO: make it so that the theater list doesn't expand the page, rather you can scroll through it. 
 -->
 <p></p>
-<ng-container *ngIf="theaterDataSource; else noTheatersTemplate">
-    <table mat-table [dataSource]="nearbyTheaters">
-        <ng-container matColumnDef="name">
-            <th mat-header-cell *matHeaderCellDef> Theater Name </th>
-            <td mat-cell *matCellDef="let theater">{{theater[0].name}}</td>
-        </ng-container>
-        <ng-container matColumnDef="address">
-            <th mat-header-cell *matHeaderCellDef> Theater Address </th>
-            <td mat-cell *matCellDef="let theater">{{theater[0].address}}</td>
-        </ng-container>
-        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-    </table>
-    <mat-paginator 
-        #paginator
-        [length]="nearbyTheaters.length"
-        [pageSize]="5"
-        ></mat-paginator>
-</ng-container>
-
+<table mat-table [dataSource]="theaterDataSource">
+    <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef> Theater Name </th>
+        <td mat-cell *matCellDef="let theater">{{theater[0].name}}</td>
+    </ng-container>
+    <ng-container matColumnDef="address">
+        <th mat-header-cell *matHeaderCellDef> Theater Address </th>
+        <td mat-cell *matCellDef="let theater">{{theater[0].address}}</td>
+    </ng-container>
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+</table>
+<mat-paginator 
+    #paginator
+    [length]="nearbyTheaters.length"
+    [pageSize]="pageSize"
+    (page)="pageChangeEvent($event)"
+></mat-paginator>
 <ng-template #noTheatersTemplate></ng-template>
