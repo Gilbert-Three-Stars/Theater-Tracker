@@ -38,6 +38,7 @@ export class AppComponent implements OnInit {
   curHoveredTheaterName: string = "<-Hover on theater to view name->";
   curResolution: number = 108.09828206839214;
   radiusPixels: number = 700;
+  strokeWidth: number = 800;
   private zIndexTheaterLayer = 1;
   locationCircle: Circle = new Circle([0,0], 0);
   private theaterVectorSource = new VectorSource();
@@ -86,7 +87,7 @@ export class AppComponent implements OnInit {
         }),
         stroke: new Stroke({
           color: [240, 88, 240, 0.75],
-          width: 800
+          width: this.strokeWidth
         })
       }))
       this.markerRadiusVectorSource.addFeature(radiusFeature)

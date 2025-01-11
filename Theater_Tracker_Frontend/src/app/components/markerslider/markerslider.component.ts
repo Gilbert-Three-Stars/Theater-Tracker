@@ -15,15 +15,16 @@ export class MarkersliderComponent {
   @Output() radiusChanged = new EventEmitter<number>();
   @Input() curResolution: number = 108.09828206839214;
   radiusPixels: number = 700
-  public displayRadius: string = (((this.radiusPixels - 400) * this.curResolution)/1000).toFixed(1); 
+  @Input() strokeWidth: number = 800;
+  public displayRadius: string = (((this.radiusPixels - (this.strokeWidth/2)) * this.curResolution)/1000).toFixed(1); 
 
   ngOnChanges(): void {
-    this.displayRadius = (((this.radiusPixels - 400) * this.curResolution)/1000).toFixed(1);
+    this.displayRadius = (((this.radiusPixels - (this.strokeWidth/2)) * this.curResolution)/1000).toFixed(1);
   }
   
   onRadiusChange(event: Event): void {
     this.radiusPixels = (event.target as HTMLInputElement).valueAsNumber;
-    this.displayRadius = (((this.radiusPixels - 400) * this.curResolution)/1000).toFixed(1);
+    this.displayRadius = (((this.radiusPixels - (this.strokeWidth/2)) * this.curResolution)/1000).toFixed(1);
     this.radiusChanged.emit(this.radiusPixels);
     
   }

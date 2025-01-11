@@ -3,11 +3,11 @@
 </header>
 <main>
   <div class="left-bar">
-    <app-markerslider [curResolution]="curResolution" (radiusChanged)="changeMarkerScale($event)"></app-markerslider>
+    <app-markerslider [curResolution]="curResolution" [strokeWidth]="strokeWidth" (radiusChanged)="changeMarkerScale($event)"></app-markerslider>
   </div>
   <app-map [map]="map"></app-map>
   <div class="right-bar">
-    <app-theaterbutton [viewCenter]="locationCircle.getCenter()" [radiusPixels]="radiusPixels" [resolution]="curResolution"></app-theaterbutton>
+    <app-theaterbutton [viewCenter]="locationCircle.getCenter()" [radiusPixels]="radiusPixels" [resolution]="curResolution" [strokeWidth]="strokeWidth"></app-theaterbutton>
   </div>
 </main>
 <footer>

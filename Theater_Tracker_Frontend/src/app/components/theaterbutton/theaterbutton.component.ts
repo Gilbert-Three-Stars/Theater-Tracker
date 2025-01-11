@@ -17,6 +17,7 @@ export class TheaterbuttonComponent {
   @Input() viewCenter: any = undefined;
   @Input() radiusPixels: number = 0;
   @Input() resolution: number = 0;
+  @Input() strokeWidth: number = 800;
   nearbyTheaters: [Theater, number][] = [];
   
   
@@ -24,7 +25,8 @@ export class TheaterbuttonComponent {
 
   onPress(): void {
     // curRadius in meters
-    this.theaterService.getNearbyTheaters(this.viewCenter, this.radiusPixels * this.resolution)
+    // subtract radius pixels by 400 because that is how much the radius gets decreased by the stroke
+    this.theaterService.getNearbyTheaters(this.viewCenter, (this.radiusPixels - (this.strokeWidth/2)) * this.resolution)
     .subscribe(theaters => {
       this.nearbyTheaters = theaters.sort((theaterA, theaterB) => { return theaterA[1] - theaterB[1] });
     })

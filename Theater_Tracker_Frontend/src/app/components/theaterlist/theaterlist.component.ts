@@ -18,7 +18,7 @@ export class TheaterlistComponent {
   curPageIndex = 0;
   @ViewChild(MatTable) theaterTable!: MatTable<any>;
 
-  displayedColumns = ['name', 'address'];
+  displayedColumns = ['name', 'address', 'distance'];
   // since our only input is nearbyTheaters, and nearbyTheaters changes as a result of the button being
   // pressed, this happens when the button gets pressed. We want to reset the curPageIndex.
   ngOnChanges(): void {
