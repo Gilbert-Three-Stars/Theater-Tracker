@@ -17,7 +17,7 @@ import Feature from 'ol/Feature';
 import { Point, Circle } from 'ol/geom';
 import View from 'ol/View';
 import Select from 'ol/interaction/Select.js';
-import { Fill, Stroke, Style, Icon } from 'ol/style';
+import { Fill, Stroke, Style } from 'ol/style';
 import { pointerMove } from 'ol/events/condition';
 import { fromLonLat } from 'ol/proj';
 
@@ -35,7 +35,7 @@ export class AppComponent implements OnInit {
   map!: Map;
   mapView = new View();
   radiusScaler: number = 0.077090340142445;
-  curHoveredTheaterName: string = "<-Hover on theater to view name->";
+  curHoveredTheaterName: string = "<-Hover over theater to view name->";
   curResolution: number = 108.09828206839214;
   radiusPixels: number = 700;
   strokeWidth: number = 800;
@@ -122,7 +122,7 @@ export class AppComponent implements OnInit {
       this.map.on('pointermove', (event) => {
         if(theaterSelected) {
           theaterSelected = false;
-          this.curHoveredTheaterName = "<-Hover on theater to view name->"
+          this.curHoveredTheaterName = "<-Hover over theater to view name->"
         }
         this.map.forEachFeatureAtPixel(event.pixel, (feature) => {
           theaterSelected = true;
