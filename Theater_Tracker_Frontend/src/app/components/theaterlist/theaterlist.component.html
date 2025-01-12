@@ -12,8 +12,8 @@ TODO: make it so that the theater list doesn't expand the page, rather you can s
         <td mat-cell *matCellDef="let theater">{{theater[0].address}}</td>
     </ng-container>
     <ng-container matColumnDef="distance">
-        <th mat-header-cell *matHeaderCellDef> Distance </th>
-        <td mat-cell *matCellDef="let theater">{{theater[1]}}</td>
+        <th mat-header-cell *matHeaderCellDef> Distance (km) </th>
+        <td mat-cell *matCellDef="let theater">{{(theater[1]/1000).toFixed(1)}}</td>
     </ng-container>
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
     <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
