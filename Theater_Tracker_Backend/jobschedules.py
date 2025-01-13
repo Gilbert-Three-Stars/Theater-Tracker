@@ -20,7 +20,7 @@ job_defaults = {
 }
 
 sched = BlockingScheduler(jobstores=jobstores, executors=executors, job_defaults=job_defaults)
-
+# TODO: Need to change how this works once I have added in the links.
 @sched.scheduled_job('interval', minutes=2160)
 def update_theaters():
     downgrade()
