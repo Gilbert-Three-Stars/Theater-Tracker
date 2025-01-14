@@ -20,13 +20,14 @@ import Select from 'ol/interaction/Select.js';
 import { Fill, Stroke, Style } from 'ol/style';
 import { pointerMove } from 'ol/events/condition';
 import { fromLonLat } from 'ol/proj';
+import { LoginbuttonComponent } from "./components/loginbutton/loginbutton.component";
 
 
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, MapComponent, MarkersliderComponent, HoveredtheaterlabelComponent, TheaterbuttonComponent, CommonModule],
+  imports: [RouterOutlet, MapComponent, MarkersliderComponent, HoveredtheaterlabelComponent, TheaterbuttonComponent, CommonModule, LoginbuttonComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',
 })
