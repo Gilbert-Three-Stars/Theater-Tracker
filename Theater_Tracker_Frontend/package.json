@@ -30,6 +30,7 @@
     "@ng-web-apis/geolocation": "^4.11.1",
     "@types/googlemaps": "^3.43.3",
     "express": "^4.18.2",
+    "oauth2-popup-flow": "^1.1.0",
     "ol": "^10.1.0",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
