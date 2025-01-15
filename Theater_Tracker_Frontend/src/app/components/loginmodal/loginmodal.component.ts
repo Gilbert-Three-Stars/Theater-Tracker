@@ -26,6 +26,6 @@ export class LoginmodalComponent {
     console.log('log in button clicked')
     console.log('username: ' + this.username.getRawValue());
     console.log('password: ' + this.password.getRawValue());
-     
+    // TODO: Send the username and password to the backend and see if its in the user table 
   }
 }
