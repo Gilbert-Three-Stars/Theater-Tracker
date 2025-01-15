@@ -15,7 +15,10 @@ export class LoginbuttonComponent {
   readonly loginModal = inject(MatDialog);
 
   openModal(): void {
-    const modalRef = this.loginModal.open(LoginmodalComponent);
+    const modalRef = this.loginModal.open(LoginmodalComponent, {
+      height: '75%',
+      width: '30%',
+    });
     modalRef.afterClosed().subscribe(result => {
       console.log('login modal closed')
     })
