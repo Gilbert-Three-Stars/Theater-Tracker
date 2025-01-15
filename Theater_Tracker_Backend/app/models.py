@@ -39,9 +39,9 @@ class Theater(db.Model):
     
 class User(db.Model):
     id: so.Mapped[int] = so.mapped_column(primary_key=True)
-    email: so.Mapped[str] = so.mapped_column(sa.String(64), index=True, unique=True)
-    username: so.Mapped[str] = so.mapped_column(sa.String(120), index=True)
-    password_hash: so.Mapped[Optional[str]] = so.mapped_column(sa.String(256))
+    email: so.Mapped[Optional[str]] = so.mapped_column(sa.String(64), index=True, unique=True)
+    username: so.Mapped[str] = so.mapped_column(sa.String(120), index=True, unique=True)
+    password_hash: so.Mapped[str] = so.mapped_column(sa.String(256))
     bookmarkedTheaters: so.Mapped[Optional[list["Theater"]]] = so.relationship('Theater', secondary=user_theater_association, back_populates='theater')
 
     def __repr__(self) -> str:
