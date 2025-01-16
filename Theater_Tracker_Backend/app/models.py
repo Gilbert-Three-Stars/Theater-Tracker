@@ -29,7 +29,7 @@ class Theater(db.Model):
     latitude: so.Mapped[float] = so.mapped_column()
     name: so.Mapped[str] = so.mapped_column(sa.String(100))
     address: so.Mapped[str] = so.mapped_column(sa.String(120))
-    numScreens: so.Mapped[Optional[int]] = so.mapped_column()
+    numScreens: so.Mapped[int] = so.mapped_column()
     # For a many-to-many relationship, secondary specifies the intermediary table, 
     # and is typically an instance of Table
     users: so.Mapped[Optional[list["User"]]] = so.relationship('User', secondary=user_theater_association, back_populates='bookmarkedTheaters')

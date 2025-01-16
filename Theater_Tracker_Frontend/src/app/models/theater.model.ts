@@ -7,7 +7,7 @@ export class Theater {
         public latitude: number,
         public longitude: number,
         public name: string,
-        public numScreens: null | number,
+        public numScreens: number,
         public users: null | Array<User>
     ) {}
 }

@@ -3,7 +3,7 @@ from schemas import UserSchema, TheaterSchema
 from app.models import Theater, User
 import sqlalchemy as sa
 import sqlalchemy.orm as so
-from flask import jsonify
+from flask import jsonify, request
 
 @app.route('/')
 def default():
@@ -19,9 +19,11 @@ def get_theaters():
     theaters = schema.dump(theater_objects)
     return jsonify(theaters)
 
-@app.route('/login/<username>/<password>')
-def check_login(username, password):
+@app.route('/login', methods=['GET, POST'])
+def check_login():
     # fetch users from the database and check against the username and password received
+    curUser = request.json
+    return curUser
     userSelect = sa.Select(User).where(User.username == username)
     userObject = db.session.scalars(userSelect).all()
     schema = UserSchema(many=True)
@@ -41,7 +43,7 @@ def register_user(username, password):
     schema = UserSchema(many=True)
     curUser = schema.dump(userObject)
     if(len(curUser) != 0):
-        return jsonify('username taken -> {}'.format(curUser))
+        return jsonify('username taken')
     passwordHash = bcrypt.generate_password_hash(password).decode('utf-8')
     newUser = User(username=username, passwordHash=passwordHash)
     db.session.add(newUser)
