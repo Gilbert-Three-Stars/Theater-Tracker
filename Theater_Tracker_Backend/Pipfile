@@ -13,6 +13,7 @@ flask-cors = "*"
 apscheduler = "*"
 beautifulsoup4 = "*"
 requests = "*"
+flask-bcrypt = "*"
 
 [dev-packages]
 

@@ -32,7 +32,7 @@ class Theater(db.Model):
     numScreens: so.Mapped[Optional[int]] = so.mapped_column()
     # For a many-to-many relationship, secondary specifies the intermediary table, 
     # and is typically an instance of Table
-    users: so.Mapped[Optional[list["User"]]] = so.relationship('User', secondary=user_theater_association, back_populates='user')
+    users: so.Mapped[Optional[list["User"]]] = so.relationship('User', secondary=user_theater_association, back_populates='bookmarkedTheaters')
 
     def __repr__(self) -> str:
         return '<Theater {}>'.format(self.name)
@@ -42,10 +42,11 @@ class User(db.Model):
     email: so.Mapped[Optional[str]] = so.mapped_column(sa.String(64), index=True, unique=True)
     username: so.Mapped[str] = so.mapped_column(sa.String(120), index=True, unique=True)
     passwordHash: so.Mapped[str] = so.mapped_column(sa.String(256))
-    bookmarkedTheaters: so.Mapped[Optional[list["Theater"]]] = so.relationship('Theater', secondary=user_theater_association, back_populates='theater')
+    bookmarkedTheaters: so.Mapped[Optional[list["Theater"]]] = so.relationship('Theater', secondary=user_theater_association, back_populates='users')
 
     def __repr__(self) -> str:
         return '<User {}'.format(self.username)
+    
     
 # See: https://medium.com/@warrenzhang17/many-to-many-relationships-in-sqlalchemy-ba08f8e9ccf7
 # Go to end of article for adding, querying, and removing associations.
