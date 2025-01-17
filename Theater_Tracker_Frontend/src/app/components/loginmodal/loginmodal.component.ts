@@ -26,7 +26,6 @@ export class LoginmodalComponent {
   username = new FormControl('', Validators.required);
   password = new FormControl('', [Validators.required, Validators.minLength(8), Validators.maxLength(200)]);
   loginButtonClick(): void {
-    console.log('log in button clicked')
     console.log('username: ' + this.username.getRawValue());
     console.log('password: ' + this.password.getRawValue());
     /*
@@ -39,6 +38,6 @@ export class LoginmodalComponent {
     // TODO: Send the username and password to the backend and see if its in the user table 
     // sending an array will send over json
     this.httpClient.post(`${environment.API_URL}/login`, [this.username.getRawValue(), this.password.getRawValue()])
-    
+
   }
 }

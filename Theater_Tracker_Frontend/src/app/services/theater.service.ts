@@ -14,14 +14,6 @@ import { fromLonLat } from 'ol/proj';
 export class TheaterService {
   constructor(private httpClient: HttpClient) { }
 
-  testObservable(): Observable<any> {
-    const testObs = new Observable((subscriber) => {
-      subscriber.next(1)
-    })
-    return testObs
-  }
-
-
   getTheaters(): Observable<Theater[]> {
     return this.httpClient.get(`${environment.API_URL}/theaters`).pipe(map(json => {
       let counter = 0
