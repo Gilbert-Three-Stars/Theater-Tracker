@@ -3,7 +3,8 @@ from schemas import UserSchema, TheaterSchema
 from app.models import Theater, User
 import sqlalchemy as sa
 import sqlalchemy.orm as so
-from flask import jsonify, request, Response
+from flask import jsonify, request, make_response
+# the lowercase request is an object that is an instance of the class Request
 
 @app.route('/')
 def default():
@@ -19,23 +20,36 @@ def get_theaters():
     theaters = schema.dump(theater_objects)
     return jsonify(theaters)
 
-@app.route('/login', methods=['GET', 'POST'])
+@app.route('/login', methods=['POST'])
 def check_login():
     # fetch users from the database and check against the username and password received
-    curUser = request.get_json(force=True)
-    return curUser
-    return Response(curUser, mimetype='application/json')
+    # curUser = request.get_json(force=True)
+    # print(curUser)
+    userLoginInfo = request.get_json(force=True)
+    username = userLoginInfo['username']
+    password = userLoginInfo['password']
+
     userSelect = sa.Select(User).where(User.username == username)
     userObject = db.session.scalars(userSelect).all()
     schema = UserSchema(many=True)
     curUser = schema.dump(userObject)
     if(len(curUser) == 0): # there is no user with this username
-        return jsonify('no user') # TODO: figure out what to return
+        # (body, status)
+        # unexpected character at line 1 column 1 of JSON data
+        # string encoded to UTF-8 as the body.
+        return make_response(jsonify("user not found"), 200)
     # there is a user with the username, so we need to check the password
     if(bcrypt.check_password_hash(curUser[0]['passwordHash'], password)):
-        return jsonify(curUser)
+        userDict = {
+            "id": curUser[0]['id'],
+            "email": curUser[0]['email'],
+            "username": curUser[0]['username'],
+            "bookmarkedTheaters": curUser[0]['bookmarkedTheaters']
+        }
+        return make_response(jsonify(userDict), 200)
     # if we made it here, the user exists but the password is wrong.
-    return jsonify('wrong password') # TODO: figure out what to return
+    # https://stackoverflow.com/questions/32752578/whats-the-appropriate-http-status-code-to-return-if-a-user-tries-logging-in-wit
+    return make_response(jsonify("incorrect password"), 200)
 
 
 @app.route('/register/<username>/<password>')

@@ -37,14 +37,13 @@ export class TheaterService {
         lineCoords.push(fromLonLat([theaterObj['longitude'], theaterObj['latitude']]))
         lineCoords.push(viewCenter);
         let curLine = new LineString(lineCoords)
-        // getLength is probably in meters? maybe?
-        // so radius should also be in meters
-        // TODO: change the way you calculate distance (getLength doesn't work well for web mercator projection)
+        // getLength is in meters, so radius should also be in meters
         if(curLine.getLength() <= radius) {
           nearbyTheaters.push([theaterObj, curLine.getLength()]);
           theaterCount += 1;
         }
         //TODO: perhaps sort by distance so that we can get the first closest 100. 
+        // in the scenario that there are more than 100 theaters in the radius
         if(theaterCount >= 100) break;
       }
       return nearbyTheaters
