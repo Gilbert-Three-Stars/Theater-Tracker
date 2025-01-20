@@ -1,19 +1,18 @@
 import { Component } from '@angular/core';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { environment } from '../../../environments/env'; // dev env
 import { LoginService } from '../../services/login.service';
 import { MatDialogModule } from '@angular/material/dialog'; 
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button'; 
-import { Observable, map } from 'rxjs';
+import { CommonModule } from '@angular/common';
 
 
 @Component({
   selector: 'app-loginmodal',
   standalone: true,
-  imports: [MatDialogModule, MatFormFieldModule, MatInputModule, ReactiveFormsModule, MatButtonModule],
+  imports: [MatDialogModule, MatFormFieldModule, MatInputModule, ReactiveFormsModule, MatButtonModule, CommonModule],
   templateUrl: './loginmodal.component.html',
   styleUrl: './loginmodal.component.css'
 })
@@ -25,12 +24,14 @@ export class LoginmodalComponent {
   */
   constructor(private httpClient: HttpClient, private loginService: LoginService) {}
   loginError: string = '';
+  registerError: string = '';
+  // login -> login modal, register -> register modal, reset -> reset password modal
+  modalType: string = 'login'; 
 
   username = new FormControl('', Validators.required);
   password = new FormControl('', [Validators.required, Validators.minLength(8), Validators.maxLength(200)]);
   loginButtonClick(): void {
-    console.log('username: ' + this.username.getRawValue());
-    console.log('password: ' + this.password.getRawValue());
+    this.loginError = '';
     // TODO: Start a loading animation here
     let curUsername = this.username.getRawValue();
     let curPassword = this.password.getRawValue();
@@ -38,13 +39,28 @@ export class LoginmodalComponent {
     if(curPassword === null) curPassword = '';
     this.loginService.login(curUsername, curPassword).subscribe(res => {
       // end the loading animation here.
-      if(res === "user not found" || res === "incorrect password") {
+      if(res === "Username not found" || res === "Incorrect password") {
         console.log(res)
         this.loginError = res;
         return;
       }
-      
+    })
+    console.log(this.loginError)
+  }
 
+  registerButtonClick(): void {
+    // loading animation starts here
+    let curUsername = this.username.getRawValue();
+    let curPassword = this.password.getRawValue();
+    if(curUsername === null) curUsername = ''; 
+    if(curPassword === null) curPassword = '';
+    this.loginService.register(curUsername, curPassword).subscribe(res => {
+      // loading animation ends here
+      if(res === 'Username taken') {
+        this.registerError = res;
+        return;
+      }
     })
   }
+
 }

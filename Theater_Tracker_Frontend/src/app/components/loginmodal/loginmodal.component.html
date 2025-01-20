@@ -1,14 +1,39 @@
-<h2 mat-dialog-title class="loginTitle">Log In / Register</h2>
-<mat-dialog-content class="loginForm">
-    <mat-form-field>
-        <mat-label for="username">Username: </mat-label>
-        <input matInput id="username" [formControl]="username">
-    </mat-form-field>
-    <mat-form-field>
-        <mat-label for="password">Password: </mat-label>
-        <input matInput id="password" [formControl]="password">
-    </mat-form-field>
-</mat-dialog-content>
-<button mat-stroked-button color="accent" (click)="loginButtonClick()"> Log In </button>
+
+<!--
+TODO: move down the username and password button slightly
+-->
+<ng-container *ngIf="modalType === 'login'">
+    <h2 mat-dialog-title class="title">Log In</h2>
+    <mat-dialog-content class="loginForm">
+        <mat-form-field color="accent">
+            <mat-label for="username">Username: </mat-label>
+            <input matInput placeholder="Username" id="username" [formControl]="username">
+        </mat-form-field>
+        <mat-form-field color="accent"> 
+            <mat-label for="password">Password: </mat-label>
+            <input matInput placeholder="Password" id="password" [formControl]="password">
+            <mat-error>{{loginError}}</mat-error>
+        </mat-form-field>
+    </mat-dialog-content>
+    <button mat-stroked-button color="accent" (click)="loginButtonClick()"> Log In </button>
+</ng-container>
+
+<ng-container *ngIf="modalType === 'register'">
+    <h2 mat-dialog-title class="title">Register</h2>
+    <mat-dialog-content class="loginForm">
+        <mat-form-field color="accent">
+            <mat-label for="username">Username: </mat-label>
+            <input matInput placeholder="Username" id="username" [formControl]="username">
+        </mat-form-field>
+        <mat-form-field color="accent"> 
+            <mat-label for="password">Password: </mat-label>
+            <input matInput placeholder="Password" id="password" [formControl]="password">
+            <mat-error>{{loginError}}</mat-error>
+        </mat-form-field>
+    </mat-dialog-content>
+    <button mat-stroked-button color="accent" (click)="loginButtonClick()"> Register </button>
+</ng-container>
+
+
 
 

@@ -37,7 +37,7 @@ def check_login():
         # (body, status)
         # unexpected character at line 1 column 1 of JSON data
         # string encoded to UTF-8 as the body.
-        return make_response(jsonify("user not found"), 200)
+        return make_response(jsonify("Username not found"), 200)
     # there is a user with the username, so we need to check the password
     if(bcrypt.check_password_hash(curUser[0]['passwordHash'], password)):
         userDict = {
@@ -49,21 +49,24 @@ def check_login():
         return make_response(jsonify(userDict), 200)
     # if we made it here, the user exists but the password is wrong.
     # https://stackoverflow.com/questions/32752578/whats-the-appropriate-http-status-code-to-return-if-a-user-tries-logging-in-wit
-    return make_response(jsonify("incorrect password"), 200)
+    return make_response(jsonify("Incorrect password"), 200)
 
 
-@app.route('/register/<username>/<password>')
-def register_user(username, password):
+@app.route('/register', methods=['POST'])
+def register_user():
+    userLoginInfo = request.get_json(force=True)
+    username = userLoginInfo['username']
+    password = userLoginInfo['password']
     userSelect = sa.Select(User).where(User.username == username)
     userObject = db.session.scalars(userSelect).all()
     schema = UserSchema(many=True)
     curUser = schema.dump(userObject)
     if(len(curUser) != 0):
-        return jsonify('username taken')
+        return make_response(jsonify("Username taken", 200))
     passwordHash = bcrypt.generate_password_hash(password).decode('utf-8')
     newUser = User(username=username, passwordHash=passwordHash)
     db.session.add(newUser)
     db.session.commit()
-    return jsonify(200)
+    return make_response(jsonify("Successfully registered", 200))
 
 

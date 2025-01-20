@@ -16,8 +16,14 @@ export class LoginService {
   login(username: string, password: string): Observable<any> {
     return this.httpClient.post(`${environment.API_URL}/login`, {'username': username, 'password': password})
     .pipe(map(response => {
-      // currently not even getting here.
       return response;
+    }))
+  }
+
+  register(username: string, password: string): Observable<any> {
+    return this.httpClient.post(`${environment.API_URL}/register`, {username: username, 'password': password})
+    .pipe(map(response => {
+      return response
     }))
   }
 
