@@ -14,25 +14,35 @@ TODO: move down the username and password button slightly
             <input matInput placeholder="Password" id="password" [formControl]="password">
             <mat-error>{{loginError}}</mat-error>
         </mat-form-field>
+        <button mat-stroked-button color="accent" (click)="loginButtonClick()" class="accountbutton" > Log In </button>
     </mat-dialog-content>
-    <button mat-stroked-button color="accent" (click)="loginButtonClick()"> Log In </button>
+    <mat-dialog-actions align="start">
+        <button mat-button color="accent" (click)="modalSwitchClick('register')">Don't have an account? Register</button>
+    </mat-dialog-actions>
 </ng-container>
 
 <ng-container *ngIf="modalType === 'register'">
-    <h2 mat-dialog-title class="title">Register</h2>
+    <h2 mat-dialog-title class="title">Create Account</h2>
     <mat-dialog-content class="loginForm">
         <mat-form-field color="accent">
             <mat-label for="username">Username: </mat-label>
             <input matInput placeholder="Username" id="username" [formControl]="username">
+            <mat-error>{{registerError}}</mat-error>
         </mat-form-field>
         <mat-form-field color="accent"> 
             <mat-label for="password">Password: </mat-label>
             <input matInput placeholder="Password" id="password" [formControl]="password">
-            <mat-error>{{loginError}}</mat-error>
         </mat-form-field>
+        <button mat-stroked-button color="accent" (click)="registerButtonClick()" class="accountbutton"> Register </button>
     </mat-dialog-content>
-    <button mat-stroked-button color="accent" (click)="loginButtonClick()"> Register </button>
+    <mat-dialog-actions align="start">
+        <button mat-button color="accent" (click)="modalSwitchClick('login')">Have an account? Log In</button>
+    </mat-dialog-actions>
 </ng-container>
+
+
+
+
 
 
 

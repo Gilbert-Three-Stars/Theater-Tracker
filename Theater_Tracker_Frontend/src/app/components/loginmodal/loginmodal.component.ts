@@ -1,9 +1,10 @@
 import { Component } from '@angular/core';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { LoginService } from '../../services/login.service';
 import { MatDialogModule } from '@angular/material/dialog'; 
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatTabsModule } from '@angular/material/tabs'; 
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button'; 
 import { CommonModule } from '@angular/common';
@@ -12,7 +13,15 @@ import { CommonModule } from '@angular/common';
 @Component({
   selector: 'app-loginmodal',
   standalone: true,
-  imports: [MatDialogModule, MatFormFieldModule, MatInputModule, ReactiveFormsModule, MatButtonModule, CommonModule],
+  imports: [
+  MatDialogModule, 
+  MatFormFieldModule, 
+  MatInputModule, 
+  ReactiveFormsModule, 
+  MatButtonModule, 
+  CommonModule, 
+  MatTabsModule, 
+  ],
   templateUrl: './loginmodal.component.html',
   styleUrl: './loginmodal.component.css'
 })
@@ -61,6 +70,11 @@ export class LoginmodalComponent {
         return;
       }
     })
+  }
+
+ 
+  modalSwitchClick(desiredModal: string): void {
+    this.modalType = desiredModal;
   }
 
 }

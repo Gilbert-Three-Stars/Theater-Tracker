@@ -4,8 +4,8 @@
     margin-right: auto;
 }
 
-mat-stroked-button {
-    max-width: 60%;
-    margin-left: auto;
-    margin-right: auto;
+.loginForm {
+    display: flex; 
+    flex-direction: column; 
+    gap: 16px;
 }
