@@ -20,6 +20,14 @@ def get_theaters():
     theaters = schema.dump(theater_objects)
     return jsonify(theaters)
 
+@app.route('/users')
+def get_users():
+    query = sa.select(User)
+    user_objects = db.session.scalars(query).all()
+    schema = UserSchema(many=True)
+    users = schema.dump(user_objects)
+    return jsonify(users)
+
 @app.route('/login', methods=['POST'])
 def check_login():
     # fetch users from the database and check against the username and password received

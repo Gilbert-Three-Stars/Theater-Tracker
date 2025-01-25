@@ -1,4 +1,4 @@
-import { Component, OnInit, afterNextRender, Inject, afterRender } from '@angular/core';
+import { Component, OnInit, afterNextRender } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { MapComponent } from './components/map/map.component';
@@ -14,7 +14,7 @@ import OSM from 'ol/source/OSM';
 import VectorLayer from 'ol/layer/Vector';
 import VectorSource from 'ol/source/Vector';
 import Feature from 'ol/Feature';
-import { Point, Circle } from 'ol/geom';
+import { Circle } from 'ol/geom';
 import View from 'ol/View';
 import Select from 'ol/interaction/Select.js';
 import { Fill, Stroke, Style } from 'ol/style';
@@ -32,10 +32,13 @@ import { LoginbuttonComponent } from "./components/loginbutton/loginbutton.compo
   styleUrl: './app.component.css',
 })
 export class AppComponent implements OnInit {
+  
   title = 'theater-tracker';
+  loginState: boolean = false;
+  username: string = "";
+
   map!: Map;
   mapView = new View();
-  radiusScaler: number = 0.077090340142445;
   curHoveredTheaterName: string = "<-Hover over theater to view name->";
   curResolution: number = 108.09828206839214;
   radiusPixels: number = 700;

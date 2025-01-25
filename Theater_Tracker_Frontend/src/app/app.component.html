@@ -1,6 +1,9 @@
 <header color="accent">
   <div class="title"> Theater Tracker </div>
-  <app-loginbutton></app-loginbutton>
+  <app-loginbutton [loginState]="loginState" [username]="username"></app-loginbutton>
+  <div class="user-info" *ngIf="loginState">
+    <p>Logged in as: {{username}}</p>
+  </div>
 </header>
 <main>
   <div class="left-bar">

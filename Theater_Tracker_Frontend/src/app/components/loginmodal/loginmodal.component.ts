@@ -1,8 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
-import { HttpClient } from '@angular/common/http';
 import { LoginService } from '../../services/login.service';
-import { MatDialogModule } from '@angular/material/dialog'; 
+import { MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog'; 
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatTabsModule } from '@angular/material/tabs'; 
 import { MatInputModule } from '@angular/material/input';
@@ -31,11 +30,13 @@ export class LoginmodalComponent {
   and immediately return either a set of validation errors or null. 
   Pass these in as the second argument when you instantiate a FormControl.
   */
-  constructor(private httpClient: HttpClient, private loginService: LoginService) {}
+  constructor(private loginService: LoginService, public modalRef: MatDialogRef<LoginmodalComponent>) {}
   loginError: string = '';
   registerError: string = '';
-  // login -> login modal, register -> register modal, reset -> reset password modal
+    // login -> login modal, register -> register modal, reset -> reset password modal
   modalType: string = 'login'; 
+  @Output() loginState = new EventEmitter<boolean>();
+  @Output() usernameEvent = new EventEmitter<string>();
 
   username = new FormControl('', Validators.required);
   password = new FormControl('', [Validators.required, Validators.minLength(8), Validators.maxLength(200)]);
@@ -53,6 +54,15 @@ export class LoginmodalComponent {
         this.loginError = res;
         return;
       }
+      else {
+        // successfully found the user and had the correct password
+        
+        this.usernameEvent.emit(curUsername);
+        this.loginState.emit(true);
+
+        // TODO: play checkmark animation here before closing the modal
+        this.modalRef.close(curUsername);
+      } 
     })
     console.log(this.loginError)
   }
@@ -71,10 +81,20 @@ export class LoginmodalComponent {
       }
     })
   }
-
  
   modalSwitchClick(desiredModal: string): void {
     this.modalType = desiredModal;
   }
 
 }
+
+
+// the username and login state can be transported from the modal to the button using the modal data
+// in the button, the modal data needs to be initiated as empty string for the username and 
+// false for the log in state
+// however, if the modal data already exists and the login state is true, the button should be disable.d
+// modal data should be initialized from 
+
+// step 1: modal data created in the log in button component based on the global log in state
+
+// step 2: send back the data when the log in button is pressed in the modal
