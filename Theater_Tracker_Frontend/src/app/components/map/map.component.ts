@@ -15,7 +15,7 @@ export class MapComponent implements OnInit{
 
   constructor() {}
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.map.setTarget("map-div");
   }
 

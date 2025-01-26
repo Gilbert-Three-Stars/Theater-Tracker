@@ -21,13 +21,22 @@ import { Fill, Stroke, Style } from 'ol/style';
 import { pointerMove } from 'ol/events/condition';
 import { fromLonLat } from 'ol/proj';
 import { LoginbuttonComponent } from "./components/loginbutton/loginbutton.component";
+import { UserstateService } from './services/userstate.service';
 
 
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, MapComponent, MarkersliderComponent, HoveredtheaterlabelComponent, TheaterbuttonComponent, CommonModule, LoginbuttonComponent],
+  imports: [
+    RouterOutlet, 
+    MapComponent, 
+    MarkersliderComponent, 
+    HoveredtheaterlabelComponent, 
+    TheaterbuttonComponent, 
+    CommonModule, 
+    LoginbuttonComponent
+  ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',
 })
@@ -48,7 +57,11 @@ export class AppComponent implements OnInit {
   private theaterVectorSource = new VectorSource();
   private markerRadiusVectorSource = new VectorSource();
   
-  constructor(private locService: LocationService, private theaterService: TheaterService) {
+  constructor(
+    private locService: LocationService, 
+    private theaterService: TheaterService, 
+    private userStateService: UserstateService
+  ) {
     let ssrView = this.locService.getCoordsAndZoom();
     afterNextRender(() => {
       let afterRenderView = this.locService.getCoordsAndZoom();
@@ -61,6 +74,12 @@ export class AppComponent implements OnInit {
   }
   
   ngOnInit(): void {
+    this.userStateService.$loginObservable.subscribe(loginValue => {
+      this.loginState = loginValue;
+    })
+    this.userStateService.$usernameObservable.subscribe(username => {
+      this.username = username;
+    })
     this.theaterService.getTheaters().subscribe(theaters => {
       let coordsZoom = this.locService.getCoordsAndZoom();
       this.mapView.setZoom(coordsZoom.getZoom());

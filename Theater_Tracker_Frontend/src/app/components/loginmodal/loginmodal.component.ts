@@ -1,6 +1,7 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { LoginService } from '../../services/login.service';
+import { UserstateService } from '../../services/userstate.service';
 import { MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog'; 
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatTabsModule } from '@angular/material/tabs'; 
@@ -30,13 +31,17 @@ export class LoginmodalComponent {
   and immediately return either a set of validation errors or null. 
   Pass these in as the second argument when you instantiate a FormControl.
   */
-  constructor(private loginService: LoginService, public modalRef: MatDialogRef<LoginmodalComponent>) {}
+  constructor(
+    private loginService: LoginService, 
+    private userStateService: UserstateService, 
+    public modalRef: MatDialogRef<LoginmodalComponent>
+  ) { }
+
   loginError: string = '';
   registerError: string = '';
     // login -> login modal, register -> register modal, reset -> reset password modal
   modalType: string = 'login'; 
-  @Output() loginState = new EventEmitter<boolean>();
-  @Output() usernameEvent = new EventEmitter<string>();
+ 
 
   username = new FormControl('', Validators.required);
   password = new FormControl('', [Validators.required, Validators.minLength(8), Validators.maxLength(200)]);
@@ -56,9 +61,8 @@ export class LoginmodalComponent {
       }
       else {
         // successfully found the user and had the correct password
+        this.userStateService.login(curUsername);
         
-        this.usernameEvent.emit(curUsername);
-        this.loginState.emit(true);
 
         // TODO: play checkmark animation here before closing the modal
         this.modalRef.close(curUsername);
@@ -98,3 +102,6 @@ export class LoginmodalComponent {
 // step 1: modal data created in the log in button component based on the global log in state
 
 // step 2: send back the data when the log in button is pressed in the modal
+
+// we need a user service that keeps track of the user state
+// this user service can be accessed by every single component that we want. 

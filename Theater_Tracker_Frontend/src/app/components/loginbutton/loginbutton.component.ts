@@ -1,7 +1,8 @@
-import { Component, inject, Input } from '@angular/core';
+import { Component, inject, Input, OnInit } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button'; 
-import { MatDialog, MatDialogModule, MAT_DIALOG_DATA } from '@angular/material/dialog'; 
+import { MatDialog, MatDialogModule } from '@angular/material/dialog'; 
 import { LoginmodalComponent } from '../loginmodal/loginmodal.component';
+import { UserstateService } from '../../services/userstate.service';
 
 
 @Component({
@@ -15,16 +16,25 @@ import { LoginmodalComponent } from '../loginmodal/loginmodal.component';
 // step 1: modal data created in the log in button component based on the global log in state
 // we need inputs for the log in state and username.
 
-export class LoginbuttonComponent {
-  readonly loginModal = inject(MatDialog);
-  buttonDisabled: boolean = false;
+export class LoginbuttonComponent implements OnInit {
 
-  @Input() loginState: boolean = false;
-  @Input() username: string = "";
+  readonly loginModal = inject(MatDialog);
+  loginState: boolean = false;
+  
+  constructor(private userStateService: UserstateService) {}
+
+  ngOnInit(): void {
+    this.userStateService.$loginObservable.subscribe(loginValue => {
+      console.log(loginValue);
+      this.loginState = loginValue;
+    })
+  }
+  
+
+
 
   openModal(): void {
     const modalRef = this.loginModal.open(LoginmodalComponent, {
-      data: { loginState: this.loginState, username: this.username },
       height: '75%',
       width: '30%',
     });
@@ -33,9 +43,5 @@ export class LoginbuttonComponent {
     })
   }
 
-  // if the user is logged in, the button should be disabled
-  buttonChange(loggedIn: boolean) {
-    this.buttonDisabled = loggedIn;
-  }
 
 }
