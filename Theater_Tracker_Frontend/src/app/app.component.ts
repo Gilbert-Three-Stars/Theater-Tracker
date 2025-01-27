@@ -22,6 +22,7 @@ import { pointerMove } from 'ol/events/condition';
 import { fromLonLat } from 'ol/proj';
 import { LoginbuttonComponent } from "./components/loginbutton/loginbutton.component";
 import { UserstateService } from './services/userstate.service';
+import { LogoutbuttonComponent } from "./components/logoutbutton/logoutbutton.component";
 
 
 
@@ -29,14 +30,15 @@ import { UserstateService } from './services/userstate.service';
   selector: 'app-root',
   standalone: true,
   imports: [
-    RouterOutlet, 
-    MapComponent, 
-    MarkersliderComponent, 
-    HoveredtheaterlabelComponent, 
-    TheaterbuttonComponent, 
-    CommonModule, 
-    LoginbuttonComponent
-  ],
+    RouterOutlet,
+    MapComponent,
+    MarkersliderComponent,
+    HoveredtheaterlabelComponent,
+    TheaterbuttonComponent,
+    CommonModule,
+    LoginbuttonComponent,
+    LogoutbuttonComponent
+],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',
 })
