@@ -5,13 +5,32 @@
 }
 header {
     background-color: var(--header-color);
-    padding: 1em;
+    display: flex;
+    align-items: center;
+    position: relative;  
+    padding: 1em;  
 }
+
+header .login-button {
+    flex: 0;
+    min-width: 15%;
+    max-width: 25%;
+}
+
+
 header .title {
     font-size: 28px;
-    justify-content: center;
-    align-items: center;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
 }
+
+
+header .user-info {
+    font-size: 15px;
+    margin-left: auto;
+}
+
 main {
     display: flex;
     flex-grow: 1;
